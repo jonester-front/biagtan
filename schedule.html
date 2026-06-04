@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>BIAGTAN MuayThai & MMA | Class Schedule</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { forge: "#f2c300", coal: "#070808" },
+            fontFamily: {
+              display: ["Montserrat", "sans-serif"],
+              body: ["Montserrat", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background-color: rgba(242, 195, 0, 0.35);
+        border: 1px solid rgba(242, 195, 0, 0.4);
+      }
+      /* UPDATED: Day headers now white text */
+      .schedule-day-header {
+        background: #070808;
+        padding: 1rem 0.25rem;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #ffffff; /* changed from #f2c300 to white */
+        border-bottom: 1px solid rgba(242, 195, 0, 0.5);
+      }
+      .schedule-cell {
+        background: #070808;
+        padding: 1rem 0.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        line-height: 1.4;
+        border-bottom: 1px solid rgba(242, 195, 0, 0.15);
+        min-height: 100px;
+        vertical-align: top;
+      }
+      .class-name {
+        font-weight: 700;
+        color: #f2c300;
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+      }
+      .class-time {
+        font-size: 0.65rem;
+        color: #ffffff;
+        font-weight: 500;
+      }
+      .class-sub {
+        font-size: 0.6rem;
+        color: #ffffff;
+        opacity: 0.9;
+        margin-top: 0.2rem;
+      }
+      @media (max-width: 768px) {
+        .schedule-wrapper {
+          overflow-x: auto;
+        }
+        .schedule-grid {
+          min-width: 800px;
+        }
+        .schedule-cell {
+          padding: 0.75rem 0.25rem;
+        }
+        .class-name {
+          font-size: 0.7rem;
+        }
+        .class-time {
+          font-size: 0.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-coal font-body text-white">
+    <main>
+      <!-- FULL WEEK SCHEDULE - EXACT MATCH TO PROVIDED DATA -->
+      <section class="bg-coal px-5 py-12 sm:px-8">
+        <div class="mx-auto max-w-7xl">
+          <div class="mb-10 text-center">
+            <h2
+              class="mt-3 font-display text-3xl font-black uppercase sm:text-4xl"
+            >
+              BIAGTAN MARTIALS ARTS
+            </h2>
+            <p
+              class="text-xs font-medium uppercase tracking-[0.28em] text-forge"
+            >
+              Training Schedule
+            </p>
+            <p class="mt-3 text-white/55 text-sm max-w-2xl mx-auto">
+              All classes are open to all levels unless specified. Sparring
+              requires coach approval.
+            </p>
+          </div>
+
+          <div class="schedule-wrapper overflow-x-auto rounded">
+            <div class="schedule-grid">
+              <!-- Day headers - NOW WHITE TEXT -->
+              <div class="schedule-day-header">SUNDAY</div>
+              <div class="schedule-day-header">MONDAY</div>
+              <div class="schedule-day-header">TUESDAY</div>
+              <div class="schedule-day-header">WEDNESDAY</div>
+              <div class="schedule-day-header">THURSDAY</div>
+              <div class="schedule-day-header">FRIDAY</div>
+              <div class="schedule-day-header">SATURDAY</div>
+
+              <!-- Row 1 -->
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+
+              <!-- Row 2 -->
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">03:00 PM - 05:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">05:00 PM - 07:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">05:00 PM - 07:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">MMA</div>
+                <div class="class-time">05:00 PM - 06:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">05:00 PM - 07:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">05:00 PM - 06:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">01:00 PM - 03:00 PM</div>
+              </div>
+
+              <!-- Row 3 -->
+              <div class="schedule-cell">
+                <div class="class-name">Recreational Training</div>
+                <div class="class-time">Open Time</div>
+                <div class="class-sub">Bag work / Drills</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">07:00 PM - 09:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">07:00 PM - 09:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">MMA</div>
+                <div class="class-time">06:00 PM - 08:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">07:00 PM - 09:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Sparring</div>
+                <div class="class-time">06:00 PM - 08:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">04:00 PM - 06:00 PM</div>
+              </div>
+            </div>
+          </div>
+
+          <p
+            class="text-center text-white/40 text-[0.65rem] mt-6 tracking-wide"
+          >
+            *Recreational classes are open to all fitness levels • Sparring
+            requires coach approval • Schedule subject to change, follow our
+            socials for updates.
+          </p>
+        </div>
+      </section>
+
+      <!-- discipline quick reference - ALL YELLOW left borders and yellow text -->
+      <section class="bg-black px-5 py-12 sm:px-8 border-t border-white/10">
+        <div class="mx-auto max-w-7xl">
+          <div class="grid gap-4 sm:grid-cols-3">
+            <div class="border-l-2 border-forge bg-coal/60 p-5">
+              <h3 class="font-bold text-forge text-lg">Muay Thai</h3>
+              <p class="text-white/50 text-sm mt-1">
+                All levels, pad work, clinch, sparring optional
+              </p>
+            </div>
+            <div class="border-l-2 border-forge bg-coal/60 p-5">
+              <h3 class="font-bold text-forge text-lg">Boxing</h3>
+              <p class="text-white/50 text-sm mt-1">
+                Fundamentals, mitts, combos, footwork
+              </p>
+            </div>
+            <div class="border-l-2 border-forge bg-coal/60 p-5">
+              <h3 class="font-bold text-forge text-lg">MMA</h3>
+              <p class="text-white/50 text-sm mt-1">
+                Striking, wrestling, ground game, cage drills
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-white/10 bg-black px-5 py-8 sm:px-8">
+      <div
+        class="mx-auto max-w-7xl flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="text-xs text-white/35">
+          © 2025 BIAGTAN MuayThai & MMA. All rights reserved.
+        </p>
+        <p class="text-xs text-white/35">
+          Raquetaz, Don Placido Ave., San Agustin 2, Dasmariñas, Cavite ·
+          Philippines
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

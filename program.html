@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>BIAGTAN | Muay Thai · Boxing · MMA Schedule & Programs</title>
+    <!-- Montserrat font consistent -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              forge: "#f2c300",
+              coal: "#070808",
+            },
+            fontFamily: {
+              display: ["Montserrat", "sans-serif"],
+              body: ["Montserrat", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* schedule grid styling */
+      .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background-color: rgba(242, 195, 0, 0.4);
+        border: 1px solid rgba(242, 195, 0, 0.45);
+      }
+      .schedule-day-header {
+        background: #070808;
+        padding: 1rem 0.25rem;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #ffffff;
+        border-bottom: 1px solid rgba(242, 195, 0, 0.5);
+      }
+      .schedule-cell {
+        background: #070808;
+        padding: 1rem 0.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        line-height: 1.4;
+        border-bottom: 1px solid rgba(242, 195, 0, 0.15);
+        min-height: 100px;
+      }
+      .class-name {
+        font-weight: 700;
+        color: #f2c300;
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+      }
+      .class-time {
+        font-size: 0.65rem;
+        color: #ffffff;
+        font-weight: 500;
+      }
+      .class-sub {
+        font-size: 0.6rem;
+        color: #ffffff;
+        opacity: 0.9;
+        margin-top: 0.2rem;
+      }
+
+      /* ===== HORIZONTAL CARDS: FIXED IMAGE HEIGHT - NO SCALING ISSUES ===== */
+      .programs-wrapper {
+        max-width: 80rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .program-card-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        background: #121212;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        border: none;
+      }
+
+      @media (min-width: 768px) {
+        .program-card-row {
+          grid-template-columns: 1fr 1fr;
+          align-items: stretch;
+        }
+        .reverse-layout .image-col {
+          order: 2;
+        }
+        .reverse-layout .text-col {
+          order: 1;
+        }
+      }
+
+      .image-col,
+      .text-col {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* CRITICAL FIX: Fixed height container, image won't stretch container */
+      .image-col {
+        background-color: #0a0a0a;
+        height: 260px;
+        flex-shrink: 0;
+        overflow: hidden;
+        position: relative;
+      }
+      .image-col img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        max-width: 100%;
+      }
+
+      /* TEXT COLUMN - independent height */
+      .text-col {
+        padding: 1.75rem 2rem;
+        background: #121212;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        min-height: 260px;
+      }
+
+      .gold-rule {
+        width: 48px;
+        height: 2px;
+        background-color: #f2c300;
+        margin: 0.75rem 0 1rem 0;
+        flex-shrink: 0;
+      }
+
+      .text-col p {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .cards-gap {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .program-card-row {
+        border: none;
+        box-shadow: none;
+      }
+
+      @media (min-width: 768px) {
+        .program-card-row {
+          align-items: center;
+        }
+        .image-col {
+          height: 260px;
+        }
+        .image-col img {
+          height: 260px;
+        }
+        .text-col {
+          min-height: 260px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .schedule-wrapper {
+          overflow-x: auto;
+        }
+        .schedule-grid {
+          min-width: 800px;
+        }
+        .text-col {
+          padding: 1.25rem;
+        }
+        .image-col,
+        .image-col img {
+          height: 220px;
+        }
+        .cards-gap {
+          gap: 1.5rem;
+        }
+      }
+
+      body {
+        background-color: #070808;
+      }
+
+      .feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .text-col h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      @media (min-width: 768px) {
+        .text-col h3 {
+          font-size: 1.75rem;
+        }
+      }
+
+      .program-card-row {
+        overflow: hidden;
+      }
+
+      /* Mobile Side Drawer Styles (right to left, full height) */
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        z-index: 40;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+      }
+      .drawer-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .side-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(280px, 75vw);
+        background-color: #070808;
+        border-left: 1px solid rgba(242, 195, 0, 0.3);
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1.25rem;
+        box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6);
+      }
+      .side-drawer.open {
+        transform: translateX(0);
+      }
+      .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(242, 195, 0, 0.2);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .drawer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .drawer-nav a {
+        display: block;
+        padding: 0.75rem 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: rgba(255, 255, 255, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+      }
+      .drawer-nav a:hover,
+      .drawer-nav a.active-mobile {
+        color: #f2c300;
+        padding-left: 0.5rem;
+        border-bottom-color: rgba(242, 195, 0, 0.4);
+      }
+      .close-drawer {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 999px;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .close-drawer:hover {
+        background: rgba(242, 195, 0, 0.2);
+      }
+      body.drawer-open {
+        overflow: hidden;
+      }
+      .menu-toggle {
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      .menu-toggle:hover {
+        border-color: #f2c300;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-coal font-body text-white antialiased">
+    <!-- Header with mobile menu toggle -->
+    <header
+      class="fixed inset-x-0 top-0 z-30 border-b border-white/10 bg-black/90 backdrop-blur-sm"
+    >
+      <div
+        class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8"
+      >
+        <a
+          href="index.html"
+          class="group flex items-center gap-3"
+          aria-label="BIAGTAN MuayThai home"
+        >
+          <img
+            src="gymlogo.png"
+            alt="BIAGTAN MuayThai Logo"
+            class="h-12 w-12 object-contain"
+            onerror="this.src = 'https://placehold.co/48x48/f2c300/111?text=MT'"
+          />
+          <span class="leading-none">
+            <span class="block font-display text-xl font-semibold text-white"
+              >BIAGTAN</span
+            >
+            <span
+              class="block text-[0.62rem] font-medium uppercase tracking-[0.35em] text-forge"
+              >MuayThai</span
+            >
+          </span>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.22em] text-white/55 md:flex"
+        >
+          <a
+            class="transition hover:text-white hover:border-white border-b border-transparent pb-2"
+            href="index.html"
+            >Home</a
+          >
+          <a class="border-b border-forge pb-2 text-forge" href="program.html"
+            >Programs</a
+          >
+          <a
+            class="transition hover:text-white hover:border-white border-b border-transparent pb-2"
+            href="contact.html"
+            >Contact</a
+          >
+          <a
+            class="transition hover:text-white hover:border-white border-b border-transparent pb-2"
+            href="events-calendar.html"
+            >Events</a
+          >
+          <a
+            class="transition hover:text-white hover:border-white border-b border-transparent pb-2"
+            href="membership.html"
+            >Membership</a
+          >
+        </nav>
+        <!-- Mobile Hamburger Button -->
+        <button
+          class="menu-toggle grid h-11 w-11 place-items-center border border-white/15 text-white md:hidden"
+          type="button"
+          aria-label="Open navigation menu"
+          id="openDrawerBtn"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Side Drawer (right to left, full height) -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="side-drawer" id="sideDrawer">
+      <div class="drawer-header">
+        <div class="flex items-center gap-2">
+          <img
+            src="gymlogo.png"
+            alt="BIAGTAN MuayThai Logo"
+            class="h-8 w-8 object-contain"
+            onerror="this.src = 'https://placehold.co/32x32/f2c300/111?text=MT'"
+          />
+          <span class="text-sm font-bold uppercase tracking-wide text-forge"
+            >BIAGTAN</span
+          >
+        </div>
+        <button
+          class="close-drawer"
+          id="closeDrawerBtn"
+          aria-label="Close menu"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-nav">
+        <a href="index.html">Home</a>
+        <a href="program.html" class="active-mobile">Programs</a>
+        <a href="contact.html">Contact</a>
+        <a href="events-calendar.html">Events</a>
+        <a href="membership.html">Membership</a>
+      </div>
+      <div class="mt-auto pt-8 text-xs text-white/40">
+        <p class="mb-1">Raquetaz, Don Placido Ave.</p>
+        <p>Dasmariñas, Cavite, Philippines</p>
+        <div class="mt-4 flex gap-3">
+          <span class="text-forge text-[10px] uppercase tracking-wider"
+            >Train like a warrior</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <main class="pt-24 md:pt-28">
+      <!-- WEEKLY SCHEDULE SECTION -->
+      <section class="bg-coal px-5 py-12 sm:px-8">
+        <div class="mx-auto max-w-7xl">
+          <div class="mb-10 text-center">
+            <h2
+              class="mt-3 font-display text-3xl font-black uppercase sm:text-4xl tracking-tight"
+            >
+              BIAGTAN MARTIAL ARTS
+            </h2>
+            <p
+              class="text-xs font-medium uppercase tracking-[0.28em] text-forge mt-1"
+            >
+              Weekly Training Schedule
+            </p>
+            <p class="mt-3 text-white/55 text-sm max-w-2xl mx-auto">
+              All classes are open to all levels unless specified. Sparring
+              requires coach approval — forge your warrior spirit.
+            </p>
+          </div>
+          <div class="schedule-wrapper overflow-x-auto rounded-sm">
+            <div class="schedule-grid">
+              <div class="schedule-day-header">SUNDAY</div>
+              <div class="schedule-day-header">MONDAY</div>
+              <div class="schedule-day-header">TUESDAY</div>
+              <div class="schedule-day-header">WEDNESDAY</div>
+              <div class="schedule-day-header">THURSDAY</div>
+              <div class="schedule-day-header">FRIDAY</div>
+              <div class="schedule-day-header">SATURDAY</div>
+              <!-- Row 1 -->
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">10:00 AM - 12:00 PM</div>
+              </div>
+              <!-- Row 2 -->
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">03:00 PM - 05:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">05:00 PM - 07:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">05:00 PM - 07:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">MMA</div>
+                <div class="class-time">05:00 PM - 06:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">05:00 PM - 07:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">05:00 PM - 06:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">01:00 PM - 03:00 PM</div>
+              </div>
+              <!-- Row 3 -->
+              <div class="schedule-cell">
+                <div class="class-name">Recreation</div>
+                <div class="class-time">Open Gym</div>
+                <div class="class-sub">Bag work / Drills</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Boxing</div>
+                <div class="class-time">07:00 PM - 09:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">07:00 PM - 09:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">MMA</div>
+                <div class="class-time">06:00 PM - 08:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">07:00 PM - 09:00 PM</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Sparring*</div>
+                <div class="class-time">06:00 PM - 08:00 PM</div>
+                <div class="class-sub">Coach approval</div>
+              </div>
+              <div class="schedule-cell">
+                <div class="class-name">Muay Thai</div>
+                <div class="class-time">04:00 PM - 06:00 PM</div>
+              </div>
+            </div>
+          </div>
+          <p
+            class="text-center text-white/40 text-[0.65rem] mt-6 tracking-wide"
+          >
+            *Sparring sessions require coach approval • Recreational open to all
+            levels • Schedule subject to change.
+          </p>
+        </div>
+      </section>
+
+      <!-- HORIZONTAL PROGRAMS: FIXED 260px IMAGE HEIGHT -->
+      <section class="bg-coal py-16 md:py-20 border-t border-white/10">
+        <div class="programs-wrapper px-5 sm:px-8">
+          <div class="mb-12 text-center">
+            <h2
+              class="font-display text-3xl font-bold uppercase sm:text-4xl tracking-tight"
+            >
+              Disciplines <span class="text-forge">We Master</span>
+            </h2>
+            <div class="mx-auto mt-3 h-1 w-20 bg-forge"></div>
+          </div>
+
+          <div class="cards-gap">
+            <!-- Program 1: Muay Thai Legacy — Image RIGHT, Text LEFT -->
+            <div class="program-card-row">
+              <div class="text-col">
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="bg-forge/10 text-forge text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider"
+                    >Signature</span
+                  >
+                  <span class="text-xs text-white/40">8-Limb Art</span>
+                </div>
+                <h3 class="font-bold uppercase tracking-tight">
+                  Muay Thai Legacy
+                </h3>
+                <div class="gold-rule"></div>
+                <p class="leading-relaxed">
+                  The heart of our gym. Learn authentic Muay Thai — punches,
+                  kicks, elbows, knees, and devastating clinch techniques.
+                  Blends traditional Wai Kru with modern fight science. Build
+                  power, resilience, and warrior mindset.
+                </p>
+                <ul
+                  class="feature-list mt-4 space-y-1.5 text-xs text-white/70 font-medium"
+                >
+                  <li>
+                    <span class="text-forge">▹</span> Heavy bag & pad work (Thai
+                    style)
+                  </li>
+                  <li>
+                    <span class="text-forge">▹</span> Clinch grappling &
+                    sweeping drills
+                  </li>
+                  <li>
+                    <span class="text-forge">▹</span> Conditioning & fight
+                    cardio circuits
+                  </li>
+                </ul>
+                <div
+                  class="mt-5 flex flex-wrap items-center gap-3 pt-3 border-t border-white/10 text-[11px] font-semibold"
+                >
+                  <span class="text-forge">Beginner to advanced</span>
+                  <span class="text-white/30">|</span>
+                  <span class="text-white/60">Sparring optional</span>
+                </div>
+              </div>
+              <div class="image-col">
+                <img
+                  src="mt.png"
+                  alt="Muay Thai training"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/800x260/f2c300/111?text=Muay+Thai'
+                  "
+                />
+              </div>
+            </div>
+
+            <!-- Program 2: Boxing Science — Image LEFT, Text RIGHT (alternate) -->
+            <div class="program-card-row reverse-layout">
+              <div class="image-col">
+                <img
+                  src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=2070&auto=format"
+                  alt="Boxing training"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/800x260/f2c300/111?text=Boxing'
+                  "
+                />
+              </div>
+              <div class="text-col">
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="bg-forge/10 text-forge text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider"
+                    >Pure Boxing</span
+                  >
+                  <span class="text-xs text-white/40">Sweet Science</span>
+                </div>
+                <h3 class="font-bold uppercase tracking-tight">
+                  Boxing Science
+                </h3>
+                <div class="gold-rule"></div>
+                <p class="leading-relaxed">
+                  Master the fundamentals of professional boxing. Footwork, head
+                  movement, combination punching, and defensive brilliance.
+                  Classes improve speed, reflexes, and ring IQ. Develop knockout
+                  precision and elite ring awareness.
+                </p>
+                <ul
+                  class="feature-list mt-4 space-y-1.5 text-xs text-white/70 font-medium"
+                >
+                  <li>
+                    <span class="text-forge">▹</span> Precision mitt work & bag
+                    drills
+                  </li>
+                  <li>
+                    <span class="text-forge">▹</span> Slip rope & defensive
+                    drills
+                  </li>
+                  <li>
+                    <span class="text-forge">▹</span> Technical sparring &
+                    combinations
+                  </li>
+                </ul>
+                <div
+                  class="mt-5 flex flex-wrap items-center gap-3 pt-3 border-t border-white/10 text-[11px] font-semibold"
+                >
+                  <span class="text-forge">All levels</span>
+                  <span class="text-white/30">|</span>
+                  <span class="text-white/60">Focus on technique</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Program 3: MMA Fusion — Image RIGHT, Text LEFT -->
+            <div class="program-card-row">
+              <div class="text-col">
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="bg-forge/10 text-forge text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider"
+                    >MMA</span
+                  >
+                  <span class="text-xs text-white/40">Unified combat</span>
+                </div>
+                <h3 class="font-bold uppercase tracking-tight">MMA Fusion</h3>
+                <div class="gold-rule"></div>
+                <p class="leading-relaxed">
+                  Seamless integration of Muay Thai, wrestling, and BJJ
+                  concepts. Ideal for aspiring MMA fighters or complete 360°
+                  combat sports training. Cage drills, transitions, ground
+                  striking, and fight IQ development.
+                </p>
+                <ul
+                  class="feature-list mt-4 space-y-1.5 text-xs text-white/70 font-medium"
+                >
+                  <li>
+                    <span class="text-forge">▹</span> Takedown defense & clinch
+                    entries
+                  </li>
+                  <li>
+                    <span class="text-forge">▹</span> Ground-and-pound technique
+                  </li>
+                  <li>
+                    <span class="text-forge">▹</span> Fight IQ & cage management
+                  </li>
+                </ul>
+                <div
+                  class="mt-5 flex flex-wrap items-center gap-3 pt-3 border-t border-white/10 text-[11px] font-semibold"
+                >
+                  <span class="text-forge">Competition prep</span>
+                  <span class="text-white/60">Advanced / Intermediate</span>
+                </div>
+              </div>
+              <div class="image-col">
+                <img
+                  src="group.png"
+                  alt="MMA training"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/800x260/f2c300/111?text=MMA'
+                  "
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER (consistent with main pages) -->
+    <footer class="border-t border-white/10 bg-black px-5 py-10 sm:px-8">
+      <div
+        class="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.2fr_.8fr_.8fr] md:items-start"
+      >
+        <!-- brand column -->
+        <div>
+          <a href="index.html" class="inline-flex items-center gap-3">
+            <img
+              src="gymlogo.png"
+              alt="BIAGTAN MuayThai Logo"
+              class="h-10 w-10 object-contain"
+              onerror="
+                this.src = 'https://placehold.co/40x40/f2c300/111?text=MT'
+              "
+            />
+            <span>
+              <span class="block text-lg font-bold text-white">BIAGTAN</span>
+              <span
+                class="block text-[0.62rem] font-medium uppercase tracking-[0.32em] text-forge"
+                >MuayThai · MMA</span
+              >
+            </span>
+          </a>
+          <p class="mt-4 max-w-md text-sm leading-7 text-white/55">
+            Muay Thai, Boxing, and MMA coaching for all levels. Raquetaz, Don
+            Placido Ave., Dasmariñas, Cavite.
+          </p>
+        </div>
+
+        <!-- quick links -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">
+            Quick Links
+          </h3>
+          <div class="mt-4 grid gap-3 text-sm text-white/55">
+            <a class="transition hover:text-forge" href="index.html">Home</a>
+            <a class="transition hover:text-forge" href="program.html"
+              >Programs</a
+            >
+            <a class="transition hover:text-forge" href="events-calendar.html"
+              >Schedule</a
+            >
+            <a class="transition hover:text-forge" href="index.html#coaches"
+              >Coaches</a
+            >
+            <a class="transition hover:text-forge" href="membership.html"
+              >Pricing</a
+            >
+            <a class="transition hover:text-forge" href="contact.html"
+              >Location</a
+            >
+          </div>
+        </div>
+
+        <!-- social & contact -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">
+            Follow Us
+          </h3>
+          <div class="mt-4 flex gap-3">
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="https://www.facebook.com/biagtanmartialarts"
+              aria-label="Facebook"
+            >
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14 8.5V6.8c0-.8.5-1.3 1.4-1.3H17V2.7c-.8-.1-1.5-.2-2.2-.2-2.8 0-4.6 1.7-4.6 4.7v1.3H7.3v3.1h2.9v7.9H14v-7.9h2.8l.5-3.1H14Z"
+                />
+              </svg>
+            </a>
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="https://www.instagram.com/biagtanmartialarts"
+              aria-label="Instagram"
+            >
+              <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="4" />
+                <circle cx="12" cy="12" r="3.3" />
+                <path d="M16.8 7.2h.01" />
+              </svg>
+            </a>
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="#"
+              aria-label="X"
+            >
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M13.9 10.6 21.1 2h-1.7l-6.3 7.5L8.2 2H2.4l7.6 11.1L2.4 22h1.7l6.6-7.8 5.2 7.8h5.8l-7.8-11.4Zm-2.3 2.7-.8-1.1L4.7 3.3h2.7l4.9 7.2.8 1.1 6.4 9.2h-2.7l-5.2-7.5Z"
+                />
+              </svg>
+            </a>
+          </div>
+          <div class="mt-4 space-y-1">
+            <div class="flex items-center rounded-lg bg-black/40 p-2">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full bg-forge/10 text-forge"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <p class="ml-2 text-sm text-white/80 break-all select-text">
+                biagtanmartialarts@gmail.com
+              </p>
+            </div>
+            <div class="flex items-center rounded-lg bg-black/40 p-2">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full bg-forge/10 text-forge"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+              </div>
+              <p class="ml-2 text-sm text-white/80 select-text">
+                +63 917 123 4567
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p>© 2026 BIAGTAN MuayThai & MMA. All rights reserved.</p>
+        <p>
+          Raquetaz, Don Placido Ave., San Agustin 2, Dasmariñas, Cavite ·
+          Philippines
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile Side Drawer Logic (right to left, full height, with overlay)
+      (function () {
+        const openBtn = document.getElementById("openDrawerBtn");
+        const drawer = document.getElementById("sideDrawer");
+        const overlay = document.getElementById("drawerOverlay");
+        const closeBtn = document.getElementById("closeDrawerBtn");
+
+        function openDrawer() {
+          if (drawer && overlay) {
+            drawer.classList.add("open");
+            overlay.classList.add("open");
+            document.body.classList.add("drawer-open");
+          }
+        }
+
+        function closeDrawer() {
+          if (drawer && overlay) {
+            drawer.classList.remove("open");
+            overlay.classList.remove("open");
+            document.body.classList.remove("drawer-open");
+          }
+        }
+
+        if (openBtn && drawer && overlay) {
+          openBtn.addEventListener("click", openDrawer);
+          closeBtn.addEventListener("click", closeDrawer);
+          overlay.addEventListener("click", closeDrawer);
+          // Close on ESC key
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && drawer.classList.contains("open")) {
+              closeDrawer();
+            }
+          });
+        }
+
+        // Smooth scroll prevention for hash links if needed (basic)
+        const allLinks = document.querySelectorAll('a[href^="#"]');
+        allLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
+            if (link.getAttribute("href") === "#") e.preventDefault();
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>BIAGTAN MuayThai | Forge Your Warrior Spirit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { forge: "#f2c300", coal: "#070808" },
+            fontFamily: {
+              display: ["Montserrat", "sans-serif"],
+              body: ["Montserrat", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* program card hover & image scaling - icons removed */
+      .program-card {
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.3s ease;
+      }
+      .program-card:hover {
+        transform: translateY(-8px);
+      }
+      .program-img {
+        transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1);
+      }
+      .program-card:hover .program-img {
+        transform: scale(1.05);
+      }
+      .hero-slide {
+        transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.4, 1);
+      }
+      html {
+        scroll-behavior: auto;
+      }
+      /* testimonial marquee */
+      .testimonial-track {
+        display: flex;
+        animation: scrollRightToLeft 35s linear infinite;
+        width: fit-content;
+      }
+      .testimonial-track:hover {
+        animation-play-state: paused;
+      }
+      @keyframes scrollRightToLeft {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+      .testimonial-card {
+        flex-shrink: 0;
+        width: 350px;
+        margin-right: 24px;
+      }
+      @media (max-width: 768px) {
+        .testimonial-card {
+          width: 280px;
+          margin-right: 16px;
+        }
+      }
+      .rating-star {
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+      /* Mobile full viewport + side drawer styles */
+      .min-h-screen-mobile {
+        min-height: 100vh;
+        min-height: 100svh;
+      }
+
+      /* Side drawer overlay and drawer panel - right to left, full height */
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(4px);
+        z-index: 40;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+      }
+      .drawer-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .side-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(280px, 75vw);
+        background-color: #070808;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1.25rem;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+      }
+      .side-drawer.open {
+        transform: translateX(0);
+      }
+      .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .drawer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .drawer-nav a {
+        display: block;
+        padding: 0.75rem 0;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: rgba(255, 255, 255, 0.7);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition:
+          color 0.2s,
+          padding-left 0.2s;
+      }
+      .drawer-nav a:hover,
+      .drawer-nav a.active-mobile {
+        color: #f2c300;
+        padding-left: 0.5rem;
+      }
+      .close-drawer {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 999px;
+        transition: background 0.2s;
+      }
+      .close-drawer:hover {
+        background: rgba(242, 195, 0, 0.2);
+      }
+      body.drawer-open {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen overflow-x-hidden bg-coal font-body text-white">
+    <header
+      class="fixed inset-x-0 top-0 z-30 border-b border-white/10 bg-black/90 backdrop-blur-sm"
+    >
+      <div
+        class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8"
+      >
+        <a
+          href="#"
+          class="group flex items-center gap-3"
+          aria-label="BIAGTAN MuayThai home"
+        >
+          <img
+            src="gymlogo.png"
+            alt="BIAGTAN MuayThai Logo"
+            class="h-12 w-12 object-contain"
+            onerror="this.src = 'https://placehold.co/48x48/f2c300/111?text=MT'"
+          />
+          <span class="leading-none">
+            <span class="block font-display text-xl font-semibold text-white"
+              >BIAGTAN</span
+            >
+            <span
+              class="block text-[0.62rem] font-medium uppercase tracking-[0.35em] text-forge"
+              >MartialArts</span
+            >
+          </span>
+        </a>
+        <button
+          class="menu-toggle grid h-11 w-11 place-items-center border border-white/15 text-white md:hidden"
+          type="button"
+          aria-label="Open navigation"
+          id="openDrawerBtn"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+        <nav
+          class="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.22em] text-white/55 md:flex"
+        >
+          <a class="border-b border-forge pb-2 text-forge" href="#">Home</a>
+          <a
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            href="program.html"
+            >Programs</a
+          >
+          <a
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            href="contact.html"
+            >Contact</a
+          >
+          <a
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            href="events-calendar.html"
+            >Events</a
+          >
+          <a
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            href="membership.html"
+            >Membership</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <!-- Mobile Side Drawer (right to left, full height) -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="side-drawer" id="sideDrawer">
+      <div class="drawer-header">
+        <div class="flex items-center gap-2">
+          <img
+            src="
+            gymlogo.png"
+            alt="BIAGTAN MuayThai Logo"
+            class="h-8 w-8 object-contain"
+            onerror="this.src = 'https://placehold.co/32x32/f2c300/111?text=MT'"
+          />
+          <span class="text-sm font-bold uppercase tracking-wide">BIAGTAN</span>
+        </div>
+        <button
+          class="close-drawer"
+          id="closeDrawerBtn"
+          aria-label="Close menu"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-nav">
+        <a href="#" class="active-mobile">Home</a>
+        <a href="program.html">Programs</a>
+        <a href="contact.html">Contact</a>
+        <a href="events-calendar.html">Events</a>
+        <a href="membership.html">Membership</a>
+      </div>
+      <div class="mt-auto pt-8 text-xs text-white/40">
+        <p>Raquetaz, Don Placido Ave.</p>
+        <p>Dasmariñas, Cavite</p>
+      </div>
+    </div>
+
+    <main>
+      <!-- Hero Section - fixed mobile min-height -->
+      <section
+        class="relative mt-20 min-h-screen-mobile overflow-hidden"
+        style="min-height: calc(100vh - 5rem); min-height: calc(100svh - 5rem)"
+      >
+        <div
+          class="hero-slide absolute inset-0 opacity-100 transition duration-700"
+          data-slide="1"
+        >
+          <img
+            class="h-full w-full object-cover"
+            src="boxing.png"
+            alt="Muay Thai training"
+            onerror="
+              this.src =
+                'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=2070&auto=format'
+            "
+          />
+        </div>
+        <div
+          class="hero-slide absolute inset-0 opacity-0 transition duration-700"
+          data-slide="2"
+        >
+          <img
+            class="h-full w-full object-cover"
+            src="ongbak.png"
+            alt="Warrior pose"
+            onerror="
+              this.src =
+                'https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=2071&auto=format'
+            "
+          />
+        </div>
+        <div
+          class="hero-slide absolute inset-0 opacity-0 transition duration-700"
+          data-slide="3"
+        >
+          <img
+            class="h-full w-full object-cover object-center"
+            src="mmav.png"
+            alt="MMA sparring"
+            onerror="
+              this.src =
+                'https://images.unsplash.com/photo-1599058917765-a3f1b1b8d2bf?q=80&w=2069&auto=format'
+            "
+          />
+        </div>
+        <div
+          class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.92)_0%,rgba(0,0,0,.68)_42%,rgba(0,0,0,.28)_100%)]"
+        ></div>
+        <div
+          class="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-coal to-transparent"
+        ></div>
+        <div
+          class="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] max-w-7xl items-center px-5 py-12 sm:px-8"
+          style="
+            min-height: calc(100vh - 5rem);
+            min-height: calc(100svh - 5rem);
+          "
+        >
+          <div class="max-w-3xl">
+            <div
+              class="mb-7 inline-flex items-center gap-3 border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium uppercase tracking-[0.25em] text-forge"
+            >
+              <span class="h-2 w-2 bg-forge"></span> Muay Thai • Boxing • MMA
+            </div>
+            <h1
+              class="font-display text-3xl sm:text-6xl lg:text-6xl font-semibold uppercase leading-[1.1] tracking-normal text-white"
+            >
+              Train Like<br />A <span class="text-forge">Warrior</span>.
+            </h1>
+            <p
+              class="mt-6 max-w-xl text-base font-normal leading-7 text-white/75 sm:text-lg"
+            >
+              Muay Thai, Boxing, and MMA coaching for all levels — beginners
+              welcome, fighters forged.
+            </p>
+            <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="booking.html"
+                class="inline-flex min-h-14 items-center justify-center bg-forge px-7 text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:bg-white"
+                >Book Now</a
+              >
+              <a
+                href="program.html
+                "
+                class="inline-flex min-h-14 items-center justify-center border border-white/20 px-7 text-sm font-medium uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white hover:text-black"
+                >View Programs</a
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="absolute bottom-7 right-5 z-20 flex items-center gap-3 sm:right-8"
+        >
+          <button
+            class="prev grid h-12 w-12 place-items-center border border-white/20 bg-black/40 transition hover:bg-forge hover:text-black"
+            type="button"
+            aria-label="Previous slide"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m15 18-6-6 6-6"
+              />
+            </svg>
+          </button>
+          <p class="min-w-16 text-center font-display text-xl">
+            <span class="slide-current text-forge">01</span
+            ><span class="text-white/35">/03</span>
+          </p>
+          <button
+            class="next grid h-12 w-12 place-items-center border border-white/20 bg-black/40 transition hover:bg-forge hover:text-black"
+            type="button"
+            aria-label="Next slide"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m9 18 6-6-6-6"
+              />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Programs Section WITH images & icons REMOVED -->
+      <section id="programs" class="relative bg-coal py-24 md:py-32">
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_30%_10%,rgba(242,195,0,0.08),transparent_70%)]"
+        ></div>
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="mb-16 text-center md:mb-20">
+            <span
+              class="inline-block text-xs font-bold uppercase tracking-[0.3em] text-forge"
+              >What we offer</span
+            >
+            <h2
+              class="mt-3 font-display text-4xl font-bold uppercase tracking-tight sm:text-5xl lg:text-6xl"
+            >
+              Training <span class="text-forge">Programs</span>
+            </h2>
+            <div class="mx-auto mt-5 h-1 w-20 bg-forge"></div>
+            <p
+              class="mx-auto mt-6 max-w-2xl text-white/60 text-base md:text-lg"
+            >
+              From beginner fundamentals to elite fight camps — find the
+              discipline that ignites your warrior spirit.
+            </p>
+          </div>
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Card 1: Muay Thai Legacy (image only, no icon) -->
+            <div
+              class="program-card group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-sm transition-all hover:border-forge/60"
+            >
+              <div class="relative h-48 overflow-hidden">
+                <img
+                  class="program-img h-full w-full object-cover transition-transform duration-500"
+                  src="mt.png"
+                  alt="Muay Thai training"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/800x400/f2c300/111?text=MUAY+THAI'
+                  "
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                ></div>
+              </div>
+              <div class="p-7 lg:p-8">
+                <h3
+                  class="font-display text-2xl font-bold uppercase tracking-tight"
+                >
+                  Muay Thai Legacy
+                </h3>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <span
+                    class="rounded-full bg-forge/10 px-3 py-0.5 text-xs font-semibold text-forge"
+                    >All Levels</span
+                  >
+                  <span
+                    class="rounded-full bg-white/5 px-3 py-0.5 text-xs font-semibold text-white/70"
+                    >Art of 8 limbs</span
+                  >
+                </div>
+                <p class="mt-4 text-white/70 leading-relaxed">
+                  Master the ancient science of Muay Thai — elbows, knees,
+                  kicks, and clinch. Authentic Thai techniques combined with
+                  modern conditioning.
+                </p>
+                <ul class="mt-5 space-y-2 text-sm text-white/60">
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Pad work & heavy bag
+                    drills
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Clinch & sweep mastery
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Sparring (optional
+                    progression)
+                  </li>
+                </ul>
+                <div class="mt-7 pt-2">
+                  <a
+                    href="program.html"
+                    class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-forge transition-all hover:gap-3 hover:text-white"
+                    >Explore class <span>→</span></a
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Card 2: Boxing Science (no icon) -->
+            <div
+              class="program-card group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-sm transition-all hover:border-forge/60"
+            >
+              <div class="relative h-48 overflow-hidden">
+                <img
+                  class="program-img h-full w-full object-cover transition-transform duration-500"
+                  src="bg.png"
+                  alt="Boxing training"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/800x400/f2c300/111?text=BOXING'
+                  "
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                ></div>
+              </div>
+              <div class="p-7 lg:p-8">
+                <h3
+                  class="font-display text-2xl font-bold uppercase tracking-tight"
+                >
+                  Boxing Science
+                </h3>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <span
+                    class="rounded-full bg-forge/10 px-3 py-0.5 text-xs font-semibold text-forge"
+                    >Technique</span
+                  ><span
+                    class="rounded-full bg-white/5 px-3 py-0.5 text-xs font-semibold text-white/70"
+                    >Footwork & Power</span
+                  >
+                </div>
+                <p class="mt-4 text-white/70 leading-relaxed">
+                  Pure boxing fundamentals: head movement, angles, punching
+                  combinations, and defensive IQ. Modern boxing training that
+                  sharpens reflexes.
+                </p>
+                <ul class="mt-5 space-y-2 text-sm text-white/60">
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Heavy bag & double-end bag
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Defensive drills & slip
+                    rope
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Technical sparring tracks
+                  </li>
+                </ul>
+                <div class="mt-7 pt-2">
+                  <a
+                    href="program.html"
+                    class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-forge transition-all hover:gap-3 hover:text-white"
+                    >Explore class <span>→</span></a
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Card 3: MMA Fusion (no icon) -->
+            <div
+              class="program-card group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-sm transition-all hover:border-forge/60"
+            >
+              <div class="relative h-48 overflow-hidden">
+                <img
+                  class="program-img h-full w-full object-cover transition-transform duration-500"
+                  src="mma.png"
+                  alt="MMA sparring"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/800x400/f2c300/111?text=MMA'
+                  "
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                ></div>
+              </div>
+              <div class="p-7 lg:p-8">
+                <h3
+                  class="font-display text-2xl font-bold uppercase tracking-tight"
+                >
+                  MMA Fusion
+                </h3>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <span
+                    class="rounded-full bg-forge/10 px-3 py-0.5 text-xs font-semibold text-forge"
+                    >Mixed Martial Arts</span
+                  ><span
+                    class="rounded-full bg-white/5 px-3 py-0.5 text-xs font-semibold text-white/70"
+                    >Striking + Grappling</span
+                  >
+                </div>
+                <p class="mt-4 text-white/70 leading-relaxed">
+                  Seamless blend of Muay Thai, Boxing, and wrestling/BJJ
+                  concepts. For MMA enthusiasts, fighters, or anyone who craves
+                  full-spectrum combat sports.
+                </p>
+                <ul class="mt-5 space-y-2 text-sm text-white/60">
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Cage drills & transitions
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> takedown defense & ground
+                    strikes
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="text-forge">✓</span> Fight conditioning
+                    circuits
+                  </li>
+                </ul>
+                <div class="mt-7 pt-2">
+                  <a
+                    href="program.html"
+                    class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-forge transition-all hover:gap-3 hover:text-white"
+                    >Explore class <span>→</span></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Coaches Section (unchanged) -->
+      <section
+        id="coaches"
+        class="border-y border-white/10 bg-black px-5 py-20 sm:px-8"
+      >
+        <div
+          class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.85fr_1.15fr] lg:items-center"
+        >
+          <div>
+            <p
+              class="text-xs font-medium uppercase tracking-[0.28em] text-forge"
+            >
+              Coaching team
+            </p>
+            <h2
+              class="mt-3 text-4xl font-semibold uppercase leading-tight sm:text-5xl"
+            >
+              World-class fighters.<br />Elite coaches.
+            </h2>
+            <p class="mt-5 max-w-xl text-sm leading-7 text-white/60">
+              Our coaches have competed and won at the highest levels of combat
+              sports.
+            </p>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-3">
+            <article class="border border-white/10 bg-coal p-5">
+              <img
+                class="aspect-[4/5] w-full object-cover grayscale"
+                src="pac1.png"
+                alt="Boxing coach"
+                onerror="
+                  this.src =
+                    'https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=600&q=80'
+                "
+              />
+              <h3 class="mt-4 text-lg font-semibold">Manny Pacquiao</h3>
+              <p class="mt-1 text-sm text-forge">Boxing</p>
+              <p class="mt-3 text-xs leading-6 text-white/55">
+                8-division world champion. Lightning-fast combinations,
+                footwork, and ring IQ.
+              </p>
+            </article>
+            <article class="border border-white/10 bg-coal p-5">
+              <img
+                class="aspect-[4/5] w-full object-cover grayscale"
+                src="ken.png"
+                alt="Muay Thai coach"
+              />
+              <h3 class="mt-4 text-lg font-semibold">Coach Khen</h3>
+              <p class="mt-1 text-sm text-forge">Muay Thai</p>
+              <p class="mt-3 text-xs leading-6 text-white/55">
+                Decades of experience. Master of the art of eight limbs.
+              </p>
+            </article>
+            <article class="border border-white/10 bg-coal p-5">
+              <img
+                class="aspect-[4/5] w-full object-cover grayscale"
+                src="connor.png"
+                alt="MMA coach"
+              />
+              <h3 class="mt-4 text-lg font-semibold">Conor McGregor</h3>
+              <p class="mt-1 text-sm text-forge">MMA</p>
+              <p class="mt-3 text-xs leading-6 text-white/55">
+                Former two-division UFC champion. Striking, wrestling
+                transitions, and mental edge.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Membership Section -->
+      <section
+        id="membership"
+        class="border-y border-white/10 bg-black px-5 py-20 sm:px-8"
+      >
+        <div class="mx-auto max-w-7xl">
+          <div class="mb-10 max-w-3xl">
+            <p
+              class="text-xs font-medium uppercase tracking-[0.28em] text-forge"
+            >
+              Membership
+            </p>
+            <h2
+              class="mt-3 text-4xl font-semibold uppercase leading-tight sm:text-5xl"
+            >
+              Pick the plan that fits your grind.
+            </h2>
+            <p class="mt-5 text-sm leading-7 text-white/60">
+              Simple memberships with no confusing extras.
+            </p>
+          </div>
+          <div class="grid gap-5 lg:grid-cols-3">
+            <article class="border border-white/10 bg-coal p-6">
+              <p
+                class="text-sm font-medium uppercase tracking-[0.22em] text-forge"
+              >
+                Starter
+              </p>
+              <div class="mt-5 flex items-end gap-2">
+                <p class="text-5xl font-semibold text-white">₱250</p>
+                <p class="pb-2 text-sm text-white/50">/ Daily</p>
+              </div>
+              <p class="mt-4 text-sm leading-7 text-white/60">
+                Best for beginners building a steady routine.
+              </p>
+              <ul class="mt-6 grid gap-3 text-sm text-white/70">
+                <li>3 gym visits per week</li>
+                <li>Open gym access</li>
+                <li>Basic progress tracking</li>
+              </ul>
+            </article>
+            <article
+              class="relative border border-forge bg-forge p-6 text-black shadow-[0_20px_70px_rgba(242,195,0,.18)]"
+            >
+              <span
+                class="absolute right-5 top-5 bg-black px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-forge"
+                >Popular</span
+              >
+              <p class="text-sm font-medium uppercase tracking-[0.22em]">
+                Athlete
+              </p>
+              <div class="mt-5 flex items-end gap-2">
+                <p class="text-5xl font-semibold">₱2,500</p>
+                <p class="pb-2 text-sm text-black/60">/ month</p>
+              </div>
+              <p class="mt-4 text-sm leading-7 text-black/70">
+                Ideal for consistent training and weekly coaching.
+              </p>
+              <ul class="mt-6 grid gap-3 text-sm text-black/75">
+                <li>Unlimited gym access</li>
+                <li>All group classes</li>
+                <li>Monthly coach check-in</li>
+              </ul>
+            </article>
+            <article class="border border-white/10 bg-coal p-6">
+              <p
+                class="text-sm font-medium uppercase tracking-[0.22em] text-forge"
+              >
+                Elite
+              </p>
+              <div class="mt-5 flex items-end gap-2">
+                <p class="text-5xl font-semibold text-white">₱6,000</p>
+                <p class="pb-2 text-sm text-white/50">/ 3 month</p>
+              </div>
+              <p class="mt-4 text-sm leading-7 text-white/60">
+                Built for members who want personal attention.
+              </p>
+              <ul class="mt-6 grid gap-3 text-sm text-white/70">
+                <li>Unlimited gym and classes</li>
+                <li>2 personal sessions monthly</li>
+                <li>Custom training plan</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section (same functionality) -->
+      <section class="bg-coal px-5 py-20 sm:px-8 overflow-hidden">
+        <div class="mx-auto max-w-7xl">
+          <div class="mb-12 text-center">
+            <span
+              class="inline-block text-xs font-bold uppercase tracking-[0.3em] text-forge"
+              >Testimonials</span
+            >
+            <h2
+              class="mt-3 font-display text-4xl font-bold uppercase tracking-tight sm:text-5xl"
+            >
+              What Our <span class="text-forge">Warriors Say</span>
+            </h2>
+            <div class="mx-auto mt-3 h-1 w-16 bg-forge"></div>
+          </div>
+          <div
+            class="mb-12 flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/10 bg-black/40 p-6 text-center sm:flex-row sm:justify-around"
+            id="ratingSummary"
+          >
+            <div>
+              <div class="flex items-center justify-center gap-1">
+                <span class="text-5xl font-bold text-forge" id="avgRating"
+                  >4.9</span
+                ><span class="text-2xl text-white/60">/5</span>
+              </div>
+              <div
+                class="mt-1 flex justify-center gap-1"
+                id="starDisplay"
+              ></div>
+              <p class="mt-2 text-sm text-white/50">
+                Based on <span id="reviewCount">247</span> reviews
+              </p>
+            </div>
+            <div class="flex flex-col items-center">
+              <p class="text-3xl font-bold text-white">★★★★★</p>
+              <p class="mt-1 text-sm text-white/60">
+                "Best Muay Thai gym in the city!"
+              </p>
+            </div>
+          </div>
+          <div
+            class="mb-12 rounded-2xl border border-white/10 bg-black/40 p-6 max-w-2xl mx-auto"
+          >
+            <h3 class="text-xl font-bold uppercase text-center mb-4">
+              Share Your Experience
+            </h3>
+            <div class="flex justify-center gap-2 mb-4" id="formStars"></div>
+            <input
+              type="text"
+              id="reviewerName"
+              placeholder="Full Name"
+              class="w-full mb-3 bg-black/60 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:border-forge"
+            /><textarea
+              id="reviewText"
+              rows="3"
+              placeholder="Write your testimonial..."
+              me
+              class="w-full mb-3 bg-black/60 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:border-forge"
+            ></textarea>
+            <div class="flex gap-3">
+              <button
+                id="submitReview"
+                class="bg-forge text-black px-6 py-2 font-semibold rounded-lg hover:bg-white transition"
+              >
+                Submit Review
+              </button>
+              <div
+                id="reviewMsg"
+                class="text-sm text-forge flex items-center"
+              ></div>
+            </div>
+          </div>
+          <div class="relative overflow-hidden">
+            <div class="testimonial-track flex" id="testimonialTrack"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER (unchanged) -->
+    <footer class="border-t border-white/10 bg-black px-5 py-10 sm:px-8">
+      <div
+        class="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.2fr_.8fr_.8fr] md:items-start"
+      >
+        <div>
+          <a href="#" class="inline-flex items-center gap-3"
+            ><img
+              src="gymlogo.png"
+              alt="BIAGTAN MuayThai Logo"
+              class="h-10 w-10 object-contain"
+              onerror="
+                this.src = 'https://placehold.co/40x40/f2c300/111?text=MT'
+              "
+            /><span
+              ><span class="block text-lg font-bold text-white">BIAGTAN</span
+              ><span
+                class="block text-[0.62rem] font-medium uppercase tracking-[0.32em] text-forge"
+                >MuayThai · MMA</span
+              ></span
+            ></a
+          >
+          <p class="mt-4 max-w-md text-sm leading-7 text-white/55">
+            Muay Thai, Boxing, and MMA coaching for all levels. Raquetaz, Don
+            Placido Ave., Dasmariñas, Cavite.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">
+            Quick Links
+          </h3>
+          <div class="mt-4 grid gap-3 text-sm text-white/55">
+            <a class="transition hover:text-forge" href="#">Home</a
+            ><a class="transition hover:text-forge" href="program.html"
+              >Programs</a
+            ><a class="transition hover:text-forge" href="events-calendar.html"
+              >Schedule</a
+            ><a class="transition hover:text-forge" href="#coaches">Coaches</a
+            ><a class="transition hover:text-forge" href="#membership"
+              >Pricing</a
+            ><a class="transition hover:text-forge" href="contact.html"
+              >Location</a
+            >
+          </div>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">
+            Follow Us
+          </h3>
+          <div class="mt-4 flex gap-3">
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="https://www.facebook.com/biagtanmartialarts"
+              aria-label="Facebook"
+              ><svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14 8.5V6.8c0-.8.5-1.3 1.4-1.3H17V2.7c-.8-.1-1.5-.2-2.2-.2-2.8 0-4.6 1.7-4.6 4.7v1.3H7.3v3.1h2.9v7.9H14v-7.9h2.8l.5-3.1H14Z"
+                /></svg></a
+            ><a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="https://www.instagram.com/biagtanmartialarts"
+              aria-label="Instagram"
+              ><svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="4" />
+                <circle cx="12" cy="12" r="3.3" />
+                <path d="M16.8 7.2h.01" /></svg></a
+            ><a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="#"
+              aria-label="X"
+              ><svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M13.9 10.6 21.1 2h-1.7l-6.3 7.5L8.2 2H2.4l7.6 11.1L2.4 22h1.7l6.6-7.8 5.2 7.8h5.8l-7.8-11.4Zm-2.3 2.7-.8-1.1L4.7 3.3h2.7l4.9 7.2.8 1.1 6.4 9.2h-2.7l-5.2-7.5Z"
+                /></svg
+            ></a>
+          </div>
+          <div class="mt-4 space-y-1">
+            <div class="flex items-center rounded-lg bg-black/40 p-2">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full bg-forge/10 text-forge"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <p class="ml-2 text-sm text-white/80 break-all select-text">
+                biagtanmartialarts@gmail.com
+              </p>
+            </div>
+            <div class="flex items-center rounded-lg bg-black/40 p-2">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full bg-forge/10 text-forge"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+              </div>
+              <p class="ml-2 text-sm text-white/80 select-text">
+                +63 917 123 4567
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p>© 2026 BIAGTAN MuayThai & MMA. All rights reserved.</p>
+        <p>
+          Raquetaz, Don Placido Ave., San Agustin 2, Dasmariñas, Cavite ·
+          Philippines
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Hero slideshow
+      const slides = document.querySelectorAll(".hero-slide");
+      const prevBtn = document.querySelector(".prev");
+      const nextBtn = document.querySelector(".next");
+      const slideCurrentSpan = document.querySelector(".slide-current");
+      if (slides.length && prevBtn && nextBtn) {
+        let currentIdx = 0;
+        const total = slides.length;
+        function updateSlides(index) {
+          slides.forEach((slide, i) => {
+            slide.style.opacity = i === index ? "1" : "0";
+          });
+          if (slideCurrentSpan) slideCurrentSpan.innerText = `0${index + 1}`;
+        }
+        function nextSlide() {
+          currentIdx = (currentIdx + 1) % total;
+          updateSlides(currentIdx);
+        }
+        function prevSlide() {
+          currentIdx = (currentIdx - 1 + total) % total;
+          updateSlides(currentIdx);
+        }
+        nextBtn.addEventListener("click", nextSlide);
+        prevBtn.addEventListener("click", prevSlide);
+        setInterval(nextSlide, 6000);
+        updateSlides(0);
+      }
+
+      // Side drawer logic (right to left, full height, overlay)
+      const openBtn = document.getElementById("openDrawerBtn");
+      const drawer = document.getElementById("sideDrawer");
+      const overlay = document.getElementById("drawerOverlay");
+      const closeBtn = document.getElementById("closeDrawerBtn");
+
+      function openDrawer() {
+        drawer.classList.add("open");
+        overlay.classList.add("open");
+        document.body.classList.add("drawer-open");
+      }
+      function closeDrawer() {
+        drawer.classList.remove("open");
+        overlay.classList.remove("open");
+        document.body.classList.remove("drawer-open");
+      }
+      if (openBtn && drawer && overlay) {
+        openBtn.addEventListener("click", openDrawer);
+        closeBtn.addEventListener("click", closeDrawer);
+        overlay.addEventListener("click", closeDrawer);
+        // Close on escape key
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && drawer.classList.contains("open")) {
+            closeDrawer();
+          }
+        });
+      }
+
+      // Testimonials Data (preserved)
+      let testimonials = [
+        {
+          name: "James Dela Cruz",
+          initials: "JD",
+          rating: 5,
+          text: "The coaches here are incredible. I went from zero experience to winning my first amateur fight in 8 months.",
+        },
+        {
+          name: "Maria Santiago",
+          initials: "MS",
+          rating: 5,
+          text: "I joined for fitness but fell in love with Muay Thai. The community is supportive.",
+        },
+        {
+          name: "Marcus Reyes",
+          initials: "MR",
+          rating: 4,
+          text: "The MMA program is legit. Coach Conor's striking classes transformed my game.",
+        },
+      ];
+      let selectedRating = 5;
+      const formStarsDiv = document.getElementById("formStars");
+      function generateFormStars() {
+        formStarsDiv.innerHTML = "";
+        for (let i = 1; i <= 5; i++) {
+          const svg = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg",
+          );
+          svg.setAttribute("viewBox", "0 0 20 20");
+          svg.setAttribute("fill", "currentColor");
+          svg.setAttribute(
+            "class",
+            `rating-star ${i <= selectedRating ? "text-forge" : "text-white/40"}`,
+          );
+          svg.setAttribute("data-rating", i);
+          svg.style.cursor = "pointer";
+          svg.style.width = "32px";
+          svg.style.height = "32px";
+          svg.innerHTML =
+            '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
+          formStarsDiv.appendChild(svg);
+        }
+      }
+      function updateFormStars(rating) {
+        const stars = formStarsDiv.querySelectorAll(".rating-star");
+        stars.forEach((star, idx) => {
+          if (idx < rating) star.classList.add("text-forge");
+          else star.classList.remove("text-forge");
+          star.classList.add("text-white/40");
+        });
+      }
+      formStarsDiv.addEventListener("click", (e) => {
+        const star = e.target.closest(".rating-star");
+        if (star) {
+          selectedRating = parseInt(star.dataset.rating);
+          updateFormStars(selectedRating);
+        }
+      });
+      function renderTestimonials() {
+        const track = document.getElementById("testimonialTrack");
+        track.innerHTML = "";
+        const allTestimonials = [...testimonials, ...testimonials];
+        allTestimonials.forEach((t) => {
+          const starsHtml = Array(5)
+            .fill(0)
+            .map(
+              (_, i) =>
+                `<svg class="h-4 w-4 ${i < t.rating ? "fill-forge" : "fill-white/30"}" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`,
+            )
+            .join("");
+          const card = document.createElement("div");
+          card.className =
+            "testimonial-card rounded-xl border border-white/10 bg-black/40 p-6 transition hover:border-forge";
+          card.innerHTML = `<div class="flex items-center gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-full bg-forge/20 text-forge font-bold text-lg">${t.initials}</div><div><p class="font-semibold text-lg">${t.name}</p><div class="flex gap-0.5 mt-1">${starsHtml}</div></div></div><p class="mt-4 text-white/80 leading-relaxed">"${t.text}"</p>`;
+          track.appendChild(card);
+        });
+      }
+      function updateRatingSummary() {
+        const total = testimonials.length;
+        const sum = testimonials.reduce((acc, t) => acc + t.rating, 0);
+        const avg = sum / total;
+        document.getElementById("avgRating").innerText = avg.toFixed(1);
+        document.getElementById("reviewCount").innerText = total;
+        const starDisplay = document.getElementById("starDisplay");
+        starDisplay.innerHTML = "";
+        for (let i = 0; i < 5; i++) {
+          const svg = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg",
+          );
+          svg.setAttribute("viewBox", "0 0 20 20");
+          svg.setAttribute("class", "h-5 w-5");
+          if (i < Math.floor(avg)) {
+            svg.setAttribute("fill", "#f2c300");
+            svg.innerHTML =
+              '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
+          } else if (i === Math.floor(avg) && avg - Math.floor(avg) >= 0.5) {
+            svg.setAttribute("fill", "#f2c300");
+            svg.innerHTML =
+              '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
+          } else {
+            svg.setAttribute("fill", "rgba(255,255,255,0.3)");
+            svg.innerHTML =
+              '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
+          }
+          starDisplay.appendChild(svg);
+        }
+      }
+      document.getElementById("submitReview").addEventListener("click", () => {
+        const name = document.getElementById("reviewerName").value.trim();
+        const text = document.getElementById("reviewText").value.trim();
+        if (!text) {
+          document.getElementById("reviewMsg").innerText =
+            "Please write a testimonial";
+          setTimeout(
+            () => (document.getElementById("reviewMsg").innerText = ""),
+            3000,
+          );
+          return;
+        }
+        const initials = name
+          ? name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "GU";
+        const displayName = name || "Anonymous Warrior";
+        testimonials.unshift({
+          name: displayName,
+          initials,
+          rating: selectedRating,
+          text,
+        });
+        renderTestimonials();
+        updateRatingSummary();
+        document.getElementById("reviewerName").value = "";
+        document.getElementById("reviewText").value = "";
+        selectedRating = 5;
+        updateFormStars(5);
+        document.getElementById("reviewMsg").innerText =
+          "✓ Thank you for your review!";
+        setTimeout(
+          () => (document.getElementById("reviewMsg").innerText = ""),
+          3000,
+        );
+      });
+      generateFormStars();
+      renderTestimonials();
+      updateRatingSummary();
+    </script>
+  </body>
+</html>

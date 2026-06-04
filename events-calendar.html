@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>BIAGTAN Martial Arts | Event Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              forge: "#f2c300",
+              coal: "#070808",
+            },
+            fontFamily: {
+              display: ["Montserrat", "Arial", "sans-serif"],
+              body: ["Montserrat", "Arial", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .calendar-day {
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .calendar-day.has-event:hover {
+        background: rgba(242, 195, 0, 0.15);
+        border-color: #f2c300;
+        transform: scale(1.02);
+      }
+      .glass-modal {
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .glass-card {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+      @media (min-width: 640px) {
+        .calendar-grid {
+          gap: 10px;
+        }
+      }
+      .modal-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .modal-scroll::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+      .modal-scroll::-webkit-scrollbar-thumb {
+        background: #f2c300;
+        border-radius: 10px;
+      }
+      .image-container {
+        flex-shrink: 0;
+      }
+      .event-image-fixed {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      /* Mobile Side Drawer Styles (right to left, full height) - consistent with all pages */
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        z-index: 40;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+      }
+      .drawer-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .side-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(280px, 75vw);
+        background-color: #070808;
+        border-left: 1px solid rgba(242, 195, 0, 0.3);
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1.25rem;
+        box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6);
+      }
+      .side-drawer.open {
+        transform: translateX(0);
+      }
+      .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(242, 195, 0, 0.2);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .drawer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .drawer-nav a {
+        display: block;
+        padding: 0.75rem 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: rgba(255, 255, 255, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+      }
+      .drawer-nav a:hover,
+      .drawer-nav a.active-mobile {
+        color: #f2c300;
+        padding-left: 0.5rem;
+        border-bottom-color: rgba(242, 195, 0, 0.4);
+      }
+      .close-drawer {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 999px;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .close-drawer:hover {
+        background: rgba(242, 195, 0, 0.2);
+      }
+      body.drawer-open {
+        overflow: hidden;
+      }
+      .menu-toggle {
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      .menu-toggle:hover {
+        border-color: #f2c300;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen overflow-x-hidden bg-coal font-body text-white">
+    <!-- ========== HEADER with mobile side drawer toggle ========== -->
+    <header
+      class="fixed inset-x-0 top-0 z-30 border-b border-white/10 bg-black/90 backdrop-blur-sm"
+    >
+      <div
+        class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8"
+      >
+        <a
+          href="index.html"
+          class="group flex items-center gap-3"
+          aria-label="BIAGTAN MuayThai home"
+        >
+          <img
+            src="gymlogo.png"
+            alt="BIAGTAN MuayThai Logo"
+            class="h-12 w-12 object-contain"
+            onerror="this.src = 'https://placehold.co/48x48/f2c300/111?text=MT'"
+          />
+          <span class="leading-none">
+            <span class="block font-display text-xl font-semibold text-white"
+              >BIAGTAN</span
+            >
+            <span
+              class="block text-[0.62rem] font-medium uppercase tracking-[0.35em] text-forge"
+              >martialarts</span
+            >
+          </span>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.22em] text-white/55 md:flex"
+        >
+          <a
+            href="index.html"
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            >Home</a
+          >
+          <a
+            href="program.html"
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            >Programs</a
+          >
+          <a
+            href="contact.html"
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            >Contact</a
+          >
+          <a
+            href="events-calendar.html"
+            class="border-b border-forge pb-2 text-forge"
+            >Events</a
+          >
+          <a
+            href="membership.html"
+            class="border-b border-transparent pb-2 transition hover:border-white hover:text-white"
+            >Membership</a
+          >
+        </nav>
+        <!-- Mobile Hamburger Button (opens side drawer) -->
+        <button
+          class="menu-toggle grid h-11 w-11 place-items-center border border-white/15 text-white md:hidden"
+          type="button"
+          aria-label="Open navigation menu"
+          id="openDrawerBtn"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Side Drawer (right to left, full height) -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="side-drawer" id="sideDrawer">
+      <div class="drawer-header">
+        <div class="flex items-center gap-2">
+          <img
+            src="gymlogo.png"
+            alt="BIAGTAN MuayThai Logo"
+            class="h-8 w-8 object-contain"
+            onerror="this.src = 'https://placehold.co/32x32/f2c300/111?text=MT'"
+          />
+          <span class="text-sm font-bold uppercase tracking-wide text-forge"
+            >BIAGTAN</span
+          >
+        </div>
+        <button
+          class="close-drawer"
+          id="closeDrawerBtn"
+          aria-label="Close menu"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-nav">
+        <a href="index.html">Home</a>
+        <a href="program.html">Programs</a>
+        <a href="contact.html">Contact</a>
+        <a href="events-calendar.html" class="active-mobile">Events</a>
+        <a href="membership.html">Membership</a>
+      </div>
+      <div class="mt-auto pt-8 text-xs text-white/40">
+        <p class="mb-1">Raquetaz, Don Placido Ave.</p>
+        <p>Dasmariñas, Cavite, Philippines</p>
+        <div class="mt-4 flex gap-3">
+          <span class="text-forge text-[10px] uppercase tracking-wider"
+            >Train like a warrior</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <main class="pt-20">
+      <!-- Hero Section -->
+      <section
+        class="relative overflow-hidden bg-gradient-to-br from-coal via-black to-coal"
+      >
+        <div class="absolute inset-0 opacity-20">
+          <div
+            class="absolute top-20 left-10 h-64 w-64 rounded-full bg-forge/5 blur-3xl"
+          ></div>
+          <div
+            class="absolute bottom-10 right-10 h-80 w-80 rounded-full bg-forge/5 blur-3xl"
+          ></div>
+        </div>
+        <div class="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:px-8">
+          <div class="text-center">
+            <div
+              class="mb-4 inline-flex items-center gap-2 rounded-full border border-forge/30 bg-forge/10 px-4 py-1.5 text-xs font-bold tracking-wider text-forge backdrop-blur-sm"
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-forge"></span>
+              BIAGTAN • EVENT CALENDAR
+            </div>
+            <h1
+              class="font-display text-4xl md:text-6xl font-bold uppercase tracking-tight"
+            >
+              Train. Compete. <span class="text-forge">Evolve.</span>
+            </h1>
+            <p
+              class="mx-auto mt-4 max-w-2xl text-white/70 text-base md:text-lg"
+            >
+              June 4th has two events | June 8th has one event — click to view
+              details
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MAIN CALENDAR SECTION -->
+      <section id="calendar-section" class="py-16 md:py-24 bg-coal">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="mb-10 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2
+                class="font-display text-3xl md:text-4xl font-bold uppercase tracking-tight"
+              >
+                <span class="text-forge">Events</span> Calendar
+              </h2>
+              <p class="mt-2 text-white/50 text-sm">
+                Click on any highlighted date to view event details
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button
+                id="prevMonthBtn"
+                class="grid h-10 w-10 place-items-center border border-white/20 bg-black/40 transition hover:bg-forge hover:text-black rounded-md"
+              >
+                <svg
+                  class="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <span
+                id="monthYearDisplay"
+                class="min-w-[180px] text-center font-display text-xl font-semibold text-white"
+              ></span>
+              <button
+                id="nextMonthBtn"
+                class="grid h-10 w-10 place-items-center border border-white/20 bg-black/40 transition hover:bg-forge hover:text-black rounded-md"
+              >
+                <svg
+                  class="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+              <button
+                id="todayBtn"
+                class="ml-2 border border-forge/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-forge transition hover:bg-forge hover:text-black rounded-md"
+              >
+                Today
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="overflow-x-auto rounded-2xl border border-white/10 bg-black/30 p-4 md:p-6 backdrop-blur-sm"
+          >
+            <div class="calendar-grid mb-3">
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-forge/80"
+              >
+                Sun
+              </div>
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/50"
+              >
+                Mon
+              </div>
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/50"
+              >
+                Tue
+              </div>
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/50"
+              >
+                Wed
+              </div>
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/50"
+              >
+                Thu
+              </div>
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/50"
+              >
+                Fri
+              </div>
+              <div
+                class="py-2 text-center text-xs font-semibold uppercase tracking-wider text-white/50"
+              >
+                Sat
+              </div>
+            </div>
+            <div id="calendarDaysContainer" class="calendar-grid"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Glass Modal -->
+    <div
+      id="eventModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center transition-all duration-300"
+      aria-modal="true"
+    >
+      <div class="absolute inset-0 bg-black/70" id="modalBackdrop"></div>
+      <div
+        class="relative mx-4 w-full max-w-6xl max-h-[85vh] overflow-y-auto rounded-2xl glass-modal shadow-2xl modal-scroll"
+      >
+        <button
+          id="closeModalBtn"
+          class="absolute right-5 top-5 z-20 text-white/70 transition hover:text-forge text-2xl font-light"
+        >
+          ✕
+        </button>
+        <div id="modalContent" class="p-6 md:p-8"></div>
+      </div>
+    </div>
+
+    <!-- FOOTER (consistent with all pages) -->
+    <footer class="border-t border-white/10 bg-black px-5 py-10 sm:px-8">
+      <div
+        class="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.2fr_.8fr_.8fr] md:items-start"
+      >
+        <!-- brand column -->
+        <div>
+          <a href="index.html" class="inline-flex items-center gap-3">
+            <img
+              src="gymlogo.png"
+              alt="BIAGTAN MuayThai Logo"
+              class="h-10 w-10 object-contain"
+              onerror="
+                this.src = 'https://placehold.co/40x40/f2c300/111?text=MT'
+              "
+            />
+            <span>
+              <span class="block text-lg font-bold text-white">BIAGTAN</span>
+              <span
+                class="block text-[0.62rem] font-medium uppercase tracking-[0.32em] text-forge"
+                >MuayThai · MMA</span
+              >
+            </span>
+          </a>
+          <p class="mt-4 max-w-md text-sm leading-7 text-white/55">
+            Muay Thai, Boxing, and MMA coaching for all levels. Raquetaz, Don
+            Placido Ave., Dasmariñas, Cavite.
+          </p>
+        </div>
+
+        <!-- quick links -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">
+            Quick Links
+          </h3>
+          <div class="mt-4 grid gap-3 text-sm text-white/55">
+            <a class="transition hover:text-forge" href="index.html">Home</a>
+            <a class="transition hover:text-forge" href="program.html"
+              >Programs</a
+            >
+            <a class="transition hover:text-forge" href="events-calendar.html"
+              >Schedule</a
+            >
+            <a class="transition hover:text-forge" href="index.html#coaches"
+              >Coaches</a
+            >
+            <a class="transition hover:text-forge" href="membership.html"
+              >Pricing</a
+            >
+            <a class="transition hover:text-forge" href="contact.html"
+              >Location</a
+            >
+          </div>
+        </div>
+
+        <!-- social & contact -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">
+            Follow Us
+          </h3>
+          <div class="mt-4 flex gap-3">
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="https://www.facebook.com/biagtanmartialarts"
+              aria-label="Facebook"
+            >
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14 8.5V6.8c0-.8.5-1.3 1.4-1.3H17V2.7c-.8-.1-1.5-.2-2.2-.2-2.8 0-4.6 1.7-4.6 4.7v1.3H7.3v3.1h2.9v7.9H14v-7.9h2.8l.5-3.1H14Z"
+                />
+              </svg>
+            </a>
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="https://www.instagram.com/biagtanmartialarts"
+              aria-label="Instagram"
+            >
+              <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="4" />
+                <circle cx="12" cy="12" r="3.3" />
+                <path d="M16.8 7.2h.01" />
+              </svg>
+            </a>
+            <a
+              class="grid h-11 w-11 place-items-center border border-white/15 text-white transition hover:border-forge hover:bg-forge hover:text-black"
+              href="#"
+              aria-label="X"
+            >
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M13.9 10.6 21.1 2h-1.7l-6.3 7.5L8.2 2H2.4l7.6 11.1L2.4 22h1.7l6.6-7.8 5.2 7.8h5.8l-7.8-11.4Zm-2.3 2.7-.8-1.1L4.7 3.3h2.7l4.9 7.2.8 1.1 6.4 9.2h-2.7l-5.2-7.5Z"
+                />
+              </svg>
+            </a>
+          </div>
+          <div class="mt-4 space-y-1">
+            <div class="flex items-center rounded-lg bg-black/40 p-2">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full bg-forge/10 text-forge"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <p class="ml-2 text-sm text-white/80 break-all select-text">
+                biagtanmartialarts@gmail.com
+              </p>
+            </div>
+            <div class="flex items-center rounded-lg bg-black/40 p-2">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full bg-forge/10 text-forge"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+              </div>
+              <p class="ml-2 text-sm text-white/80 select-text">
+                +63 917 123 4567
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p>© 2026 BIAGTAN MuayThai & MMA. All rights reserved.</p>
+        <p>
+          Raquetaz, Don Placido Ave., San Agustin 2, Dasmariñas, Cavite ·
+          Philippines
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // ------------------------------
+      // BIAGTAN MARTIAL ARTS - EVENTS
+      // June 4th: 2 events | June 8th: 1 event
+      // Fixed: Battle events don't show instructor field
+      // ------------------------------
+      const eventsDB = [
+        {
+          id: 1,
+          title: "Mayweather VS Pacquiao II",
+          date: "2026-06-04",
+          time: "19:00 - 22:00",
+          type: "Fight Event",
+          description:
+            "BIAGTAN presents the epic rematch! Mayweather VS Pacquiao II - witness two legends battle once again. Food and drinks available. Don't miss the action!",
+          location: "Main Arena",
+          image: "mp2.png",
+          isFightEvent: true,
+        },
+        {
+          id: 2,
+          title: "Muay Thai Technique Intensive",
+          date: "2026-06-04",
+          time: "15:00 - 17:00",
+          type: "Workshop",
+          instructor: "Ong Bak",
+          description:
+            "Deep dive into kicks, knees, and defensive counters. Advanced techniques for serious practitioners. Limited spots available.",
+          location: "Main Gym",
+          image: "ongbak.png",
+          isFightEvent: false,
+        },
+        {
+          id: 3,
+          title: "MMA Sparring Workshop",
+          date: "2026-06-08",
+          time: "18:30 - 20:30",
+          type: "Class",
+          instructor: "Connor McGregor",
+          description:
+            "Learn controlled sparring techniques in a safe environment. Perfect for intermediate students looking to improve their live training.",
+          location: "Octagon Area",
+          image: "connor.png",
+          isFightEvent: false,
+        },
+      ];
+
+      let currentDate = new Date();
+      let currentYear = currentDate.getFullYear();
+      let currentMonth = currentDate.getMonth();
+
+      function formatDateKey(year, month, day) {
+        return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+
+      function getEventsByDate(dateStr) {
+        return eventsDB.filter((ev) => ev.date === dateStr);
+      }
+
+      function renderCalendar() {
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+        const startWeekday = firstDayOfMonth.getDay();
+        const daysInMonth = new Date(
+          currentYear,
+          currentMonth + 1,
+          0,
+        ).getDate();
+        const monthNames = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        document.getElementById("monthYearDisplay").innerText =
+          `${monthNames[currentMonth]} ${currentYear}`;
+
+        const container = document.getElementById("calendarDaysContainer");
+        if (!container) return;
+        container.innerHTML = "";
+
+        for (let i = 0; i < startWeekday; i++) {
+          const emptyDiv = document.createElement("div");
+          emptyDiv.className =
+            "calendar-day min-h-[110px] md:min-h-[130px] rounded-lg border border-white/5 bg-white/5 p-2 opacity-30";
+          container.appendChild(emptyDiv);
+        }
+
+        const thisYear = new Date().getFullYear();
+        const thisMonth = new Date().getMonth();
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateKey = formatDateKey(currentYear, currentMonth, d);
+          const eventsOnDay = getEventsByDate(dateKey);
+          const hasEvents = eventsOnDay.length > 0;
+          const firstEventImage = hasEvents ? eventsOnDay[0].image : null;
+          const isToday =
+            currentYear === thisYear &&
+            currentMonth === thisMonth &&
+            d === new Date().getDate();
+
+          const dayDiv = document.createElement("div");
+          dayDiv.className = `calendar-day relative min-h-[110px] md:min-h-[130px] rounded-lg border transition-all duration-200 cursor-pointer overflow-hidden ${hasEvents ? "border-forge/40 hover:border-forge" : "border-white/10 bg-black/40 hover:border-white/20"}`;
+
+          if (hasEvents && firstEventImage) {
+            dayDiv.style.backgroundImage = `url(${firstEventImage})`;
+            dayDiv.style.backgroundSize = "cover";
+            dayDiv.style.backgroundPosition = "center";
+
+            dayDiv.innerHTML = `
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-80"></div>
+              <div class="relative z-10 flex flex-col justify-between h-full p-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-bold ${isToday ? "text-forge drop-shadow-md" : "text-white drop-shadow-md"}">${d}</span>
+                  <span class="h-2 w-2 rounded-full bg-forge shadow-md"></span>
+                </div>
+                <div class="mt-auto">
+                  <div class="text-[10px] font-bold uppercase tracking-tighter text-forge drop-shadow-md truncate">${eventsOnDay.length} EVENT${eventsOnDay.length > 1 ? "S" : ""}</div>
+                </div>
+              </div>
+            `;
+          } else if (hasEvents && !firstEventImage) {
+            dayDiv.innerHTML = `
+              <div class="relative z-10 flex flex-col justify-between h-full p-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium ${isToday ? "text-forge font-bold" : "text-white/80"}">${d}</span>
+                  <span class="h-2 w-2 rounded-full bg-forge"></span>
+                </div>
+                <div class="mt-auto">
+                  <div class="text-[10px] font-semibold uppercase tracking-tighter text-forge truncate">${eventsOnDay.length} EVENT${eventsOnDay.length > 1 ? "S" : ""}</div>
+                </div>
+              </div>
+            `;
+          } else {
+            dayDiv.innerHTML = `
+              <div class="relative z-10 flex flex-col justify-between h-full p-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium ${isToday ? "text-forge font-bold" : "text-white/80"}">${d}</span>
+                </div>
+              </div>
+            `;
+          }
+
+          dayDiv.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openEventsModal(dateKey, d);
+          });
+
+          container.appendChild(dayDiv);
+        }
+      }
+
+      function openEventsModal(dateKey, dayNumber) {
+        const events = getEventsByDate(dateKey);
+        const monthNames = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        const formattedDate = `${monthNames[currentMonth]} ${dayNumber}, ${currentYear}`;
+        const modal = document.getElementById("eventModal");
+        const modalContent = document.getElementById("modalContent");
+
+        if (events.length === 0) {
+          modalContent.innerHTML = `
+            <div class="text-center py-16">
+              <h3 class="font-display text-3xl font-bold text-white">${formattedDate}</h3>
+              <p class="mt-4 text-white/60 text-lg">No events scheduled for this date.</p>
+              <p class="mt-2 text-white/40">Check out June 4th (2 events) or June 8th (1 event)!</p>
+              <button class="mt-10 rounded-md border border-forge/50 px-8 py-3 text-sm font-medium text-forge transition hover:bg-forge hover:text-black" onclick="closeEventModal()">Close</button>
+            </div>
+          `;
+        } else {
+          modalContent.innerHTML = `
+            <div class="mb-8 text-center">
+              <span class="inline-block rounded-full bg-forge/20 px-4 py-1 text-xs font-bold text-forge tracking-wider">${events.length} EVENT${events.length > 1 ? "S" : ""} ON THIS DAY</span>
+              <h2 class="font-display text-3xl md:text-4xl font-bold text-white mt-3">${formattedDate}</h2>
+            </div>
+            <div class="space-y-5">
+              ${events
+                .map((ev) => {
+                  const instructorHtml = ev.isFightEvent
+                    ? ""
+                    : `<div><span class="text-white/40">Instructor:</span> ${ev.instructor}</div>`;
+                  return `
+                    <div class="glass-card rounded-xl overflow-hidden transition hover:border-forge/30 border border-white/10">
+                      <div class="flex flex-col sm:flex-row">
+                        <div class="image-container w-full sm:w-72 md:w-80 h-52 sm:h-auto flex-shrink-0">
+                          <img src="${ev.image}" alt="${ev.title}" class="event-image-fixed w-full h-full object-cover" onerror="this.src='https://placehold.co/800x600/1a1a1a/f2c300?text=BIAGTAN'">
+                        </div>
+                        <div class="flex-1 p-6 md:p-7">
+                          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span class="rounded-full bg-forge/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-forge">${ev.type}</span>
+                            <span class="text-sm text-white/40">${ev.time}</span>
+                          </div>
+                          <h3 class="font-display text-2xl font-bold text-white mb-2">${ev.title}</h3>
+                          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-white/60 mb-4">
+                            ${instructorHtml}
+                            <div><span class="text-white/40">Location:</span> ${ev.location}</div>
+                          </div>
+                          <p class="text-white/70 text-sm leading-relaxed">${ev.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                })
+                .join("")}
+            </div>
+          `;
+        }
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      }
+
+      window.closeEventModal = function () {
+        const modal = document.getElementById("eventModal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        document.body.style.overflow = "";
+      };
+
+      function prevMonth() {
+        if (currentMonth === 0) {
+          currentMonth = 11;
+          currentYear--;
+        } else {
+          currentMonth--;
+        }
+        renderCalendar();
+      }
+
+      function nextMonth() {
+        if (currentMonth === 11) {
+          currentMonth = 0;
+          currentYear++;
+        } else {
+          currentMonth++;
+        }
+        renderCalendar();
+      }
+
+      function goToToday() {
+        currentYear = new Date().getFullYear();
+        currentMonth = new Date().getMonth();
+        renderCalendar();
+      }
+
+      document
+        .getElementById("prevMonthBtn")
+        ?.addEventListener("click", prevMonth);
+      document
+        .getElementById("nextMonthBtn")
+        ?.addEventListener("click", nextMonth);
+      document.getElementById("todayBtn")?.addEventListener("click", goToToday);
+      document
+        .getElementById("modalBackdrop")
+        ?.addEventListener("click", window.closeEventModal);
+      document
+        .getElementById("closeModalBtn")
+        ?.addEventListener("click", window.closeEventModal);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") window.closeEventModal();
+      });
+
+      // Mobile Side Drawer Logic
+      (function () {
+        const openBtn = document.getElementById("openDrawerBtn");
+        const drawer = document.getElementById("sideDrawer");
+        const overlay = document.getElementById("drawerOverlay");
+        const closeBtn = document.getElementById("closeDrawerBtn");
+
+        function openDrawer() {
+          if (drawer && overlay) {
+            drawer.classList.add("open");
+            overlay.classList.add("open");
+            document.body.classList.add("drawer-open");
+          }
+        }
+
+        function closeDrawer() {
+          if (drawer && overlay) {
+            drawer.classList.remove("open");
+            overlay.classList.remove("open");
+            document.body.classList.remove("drawer-open");
+          }
+        }
+
+        if (openBtn && drawer && overlay) {
+          openBtn.addEventListener("click", openDrawer);
+          if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+          overlay.addEventListener("click", closeDrawer);
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && drawer.classList.contains("open")) {
+              closeDrawer();
+            }
+          });
+        }
+      })();
+
+      renderCalendar();
+    </script>
+  </body>
+</html>
