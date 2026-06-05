@@ -28,20 +28,17 @@
       };
     </script>
     <style>
-      /* program card hover & image scaling - icons removed */
-      .program-card {
-        transition:
-          transform 0.25s ease,
-          box-shadow 0.3s ease;
+      .program-card-modern {
+        transition: all 0.3s ease;
       }
-      .program-card:hover {
-        transform: translateY(-8px);
+      .program-card-modern:hover {
+        transform: translateY(-6px);
       }
-      .program-img {
-        transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1);
+      .program-img-modern {
+        transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1);
       }
-      .program-card:hover .program-img {
-        transform: scale(1.05);
+      .program-card-modern:hover .program-img-modern {
+        transform: scale(1.04);
       }
       .hero-slide {
         transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.4, 1);
@@ -49,7 +46,6 @@
       html {
         scroll-behavior: auto;
       }
-      /* testimonial marquee */
       .testimonial-track {
         display: flex;
         animation: scrollRightToLeft 35s linear infinite;
@@ -81,13 +77,11 @@
         cursor: pointer;
         transition: color 0.2s ease;
       }
-      /* Mobile full viewport + side drawer styles */
       .min-h-screen-mobile {
         min-height: 100vh;
         min-height: 100svh;
       }
 
-      /* Side drawer overlay and drawer panel - right to left, full height */
       .drawer-overlay {
         position: fixed;
         inset: 0;
@@ -169,6 +163,211 @@
       body.drawer-open {
         overflow: hidden;
       }
+
+      .programs-editorial {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      .program-editorial-block {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+        margin-bottom: 5rem;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 4rem;
+      }
+      .program-editorial-block:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .program-text {
+        flex: 1;
+        min-width: 280px;
+      }
+      .program-image {
+        flex: 1;
+        min-width: 280px;
+        overflow: hidden;
+        aspect-ratio: 16 / 10;
+        background: #1a1a1a;
+      }
+      .program-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        filter: grayscale(20%) contrast(1.05);
+      }
+      .program-image img:hover {
+        transform: scale(1.02);
+      }
+      .program-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #f2c300;
+        margin-bottom: 0.5rem;
+      }
+      .program-headline {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+        font-family: "Montserrat", sans-serif;
+        line-height: 1.2;
+      }
+      .program-description {
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.65);
+        margin: 1rem 0 1.25rem;
+        font-weight: 400;
+      }
+      .program-features {
+        list-style: none;
+        margin: 1.25rem 0 1.5rem;
+      }
+      .program-features li {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .program-features li::before {
+        content: "→";
+        color: #f2c300;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+      .program-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #f2c300;
+        text-decoration: none;
+        border-bottom: 1.5px solid rgba(242, 195, 0, 0.4);
+        padding-bottom: 0.3rem;
+        transition:
+          gap 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .program-btn:hover {
+        gap: 0.75rem;
+        border-bottom-color: #f2c300;
+      }
+      .program-thin-divider {
+        width: 50px;
+        height: 2px;
+        background: #f2c300;
+        margin: 0.8rem 0 1rem 0;
+      }
+
+      /* bigger social proof strip — under view programs, prominent, no border */
+      .social-proof-strip {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(2px);
+        padding: 0.6rem 1.2rem;
+        border-radius: 40px;
+        font-weight: 600;
+        letter-spacing: normal;
+        color: white;
+      }
+      .social-proof-strip .stars-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .social-proof-strip .stars-inline svg {
+        width: 18px;
+        height: 18px;
+        fill: #f2c300;
+      }
+      .social-proof-strip .rating-number {
+        font-size: 1.35rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #f2c300;
+      }
+      .social-proof-strip .rating-slash {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .social-proof-strip .review-count {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .social-proof-strip .members-count {
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: rgba(242, 195, 0, 0.15);
+        padding: 0.2rem 0.7rem;
+        border-radius: 30px;
+        letter-spacing: normal;
+      }
+      .social-proof-strip .divider-dot {
+        width: 5px;
+        height: 5px;
+        background: rgba(242, 195, 0, 0.7);
+        border-radius: 50%;
+      }
+
+      @media (max-width: 768px) {
+        .program-editorial-block {
+          flex-direction: column;
+          gap: 2rem;
+          text-align: center;
+          margin-bottom: 3.5rem;
+          padding-bottom: 2.5rem;
+        }
+        .program-text {
+          text-align: center;
+        }
+        .program-thin-divider {
+          margin: 0.8rem auto;
+        }
+        .program-headline {
+          font-size: 1.6rem;
+        }
+        .program-features li {
+          justify-content: center;
+        }
+        .social-proof-strip {
+          width: 100%;
+          justify-content: center;
+          padding: 0.5rem 1rem;
+          gap: 0.8rem;
+        }
+        .social-proof-strip .rating-number {
+          font-size: 1.2rem;
+        }
+        .social-proof-strip .members-count {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .program-image {
+          aspect-ratio: 16 / 10;
+        }
+      }
     </style>
   </head>
   <body class="min-h-screen overflow-x-hidden bg-coal font-body text-white">
@@ -243,14 +442,12 @@
       </div>
     </header>
 
-    <!-- Mobile Side Drawer (right to left, full height) -->
     <div class="drawer-overlay" id="drawerOverlay"></div>
     <div class="side-drawer" id="sideDrawer">
       <div class="drawer-header">
         <div class="flex items-center gap-2">
           <img
-            src="
-            gymlogo.png"
+            src="gymlogo.png"
             alt="BIAGTAN MuayThai Logo"
             class="h-8 w-8 object-contain"
             onerror="this.src = 'https://placehold.co/32x32/f2c300/111?text=MT'"
@@ -291,7 +488,6 @@
     </div>
 
     <main>
-      <!-- Hero Section - fixed mobile min-height -->
       <section
         class="relative mt-20 min-h-screen-mobile overflow-hidden"
         style="min-height: calc(100vh - 5rem); min-height: calc(100svh - 5rem)"
@@ -368,18 +564,57 @@
               Muay Thai, Boxing, and MMA coaching for all levels — beginners
               welcome, fighters forged.
             </p>
-            <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div
+              class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center"
+            >
               <a
                 href="booking.html"
                 class="inline-flex min-h-14 items-center justify-center bg-forge px-7 text-sm font-semibold uppercase tracking-[0.18em] text-black transition hover:bg-white"
                 >Book Now</a
               >
               <a
-                href="program.html
-                "
+                href="program.html"
                 class="inline-flex min-h-14 items-center justify-center border border-white/20 px-7 text-sm font-medium uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white hover:text-black"
                 >View Programs</a
               >
+
+              <!-- ✅ BIGGER / PROMINENT SOCIAL PROOF under View Programs -->
+              <div class="social-proof-strip mt-3 sm:mt-0">
+                <div class="stars-inline">
+                  <div class="flex items-center gap-1">
+                    <span class="rating-number">4.7</span>
+                    <span class="rating-slash">/5</span>
+                  </div>
+                  <svg viewBox="0 0 20 20">
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                  <svg viewBox="0 0 20 20">
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                  <svg viewBox="0 0 20 20">
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                  <svg viewBox="0 0 20 20">
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                  <svg viewBox="0 0 20 20" class="opacity-70">
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                </div>
+
+                <div class="divider-dot hidden sm:block"></div>
+                <span class=""> 200 Members</span>
+              </div>
             </div>
           </div>
         </div>
@@ -431,216 +666,144 @@
         </div>
       </section>
 
-      <!-- Programs Section WITH images & icons REMOVED -->
+      <!-- TRAINING PROGRAMS SECTION (unchanged) -->
       <section id="programs" class="relative bg-coal py-24 md:py-32">
         <div
-          class="absolute inset-0 bg-[radial-gradient(circle_at_30%_10%,rgba(242,195,0,0.08),transparent_70%)]"
+          class="absolute inset-0 bg-[radial-gradient(circle_at_30%_10%,rgba(242,195,0,0.06),transparent_70%)]"
         ></div>
         <div class="mx-auto max-w-7xl px-5 sm:px-8">
-          <div class="mb-16 text-center md:mb-20">
+          <div
+            class="mb-16 text-center md:mb-20"
+            style="
+              user-select: text !important;
+              -webkit-user-select: text !important;
+            "
+          >
             <span
               class="inline-block text-xs font-bold uppercase tracking-[0.3em] text-forge"
+              style="user-select: text !important"
               >What we offer</span
             >
             <h2
               class="mt-3 font-display text-4xl font-bold uppercase tracking-tight sm:text-5xl lg:text-6xl"
+              style="user-select: text !important"
             >
               Training <span class="text-forge">Programs</span>
             </h2>
             <div class="mx-auto mt-5 h-1 w-20 bg-forge"></div>
             <p
-              class="mx-auto mt-6 max-w-2xl text-white/60 text-base md:text-lg"
+              class="mx-auto mt-6 max-w-2xl text-white/55 text-sm md:text-sm tracking-wide"
+              style="user-select: text !important"
             >
               From beginner fundamentals to elite fight camps — find the
               discipline that ignites your warrior spirit.
             </p>
           </div>
-          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <!-- Card 1: Muay Thai Legacy (image only, no icon) -->
-            <div
-              class="program-card group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-sm transition-all hover:border-forge/60"
-            >
-              <div class="relative h-48 overflow-hidden">
+
+          <div class="programs-editorial">
+            <!-- Program 1: Muay Thai Legacy -->
+            <div class="program-editorial-block">
+              <div class="program-image">
                 <img
-                  class="program-img h-full w-full object-cover transition-transform duration-500"
                   src="mt.png"
                   alt="Muay Thai training"
+                  class="w-full h-full object-cover"
                   onerror="
                     this.src =
-                      'https://placehold.co/800x400/f2c300/111?text=MUAY+THAI'
+                      'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=2070&auto=format'
                   "
                 />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-                ></div>
               </div>
-              <div class="p-7 lg:p-8">
-                <h3
-                  class="font-display text-2xl font-bold uppercase tracking-tight"
-                >
-                  Muay Thai Legacy
-                </h3>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  <span
-                    class="rounded-full bg-forge/10 px-3 py-0.5 text-xs font-semibold text-forge"
-                    >All Levels</span
-                  >
-                  <span
-                    class="rounded-full bg-white/5 px-3 py-0.5 text-xs font-semibold text-white/70"
-                    >Art of 8 limbs</span
-                  >
-                </div>
-                <p class="mt-4 text-white/70 leading-relaxed">
+              <div class="program-text">
+                <span class="program-badge">Legacy Discipline</span>
+                <h3 class="program-headline">Muay Thai<br />Legacy</h3>
+                <div class="program-thin-divider"></div>
+                <p class="program-description">
                   Master the ancient science of Muay Thai — elbows, knees,
                   kicks, and clinch. Authentic Thai techniques combined with
                   modern conditioning.
                 </p>
-                <ul class="mt-5 space-y-2 text-sm text-white/60">
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Pad work & heavy bag
-                    drills
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Clinch & sweep mastery
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Sparring (optional
-                    progression)
-                  </li>
+                <ul class="program-features">
+                  <li>Pad work & heavy bag drills</li>
+                  <li>Clinch & sweep mastery</li>
+                  <li>Sparring (optional progression)</li>
                 </ul>
-                <div class="mt-7 pt-2">
-                  <a
-                    href="program.html"
-                    class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-forge transition-all hover:gap-3 hover:text-white"
-                    >Explore class <span>→</span></a
-                  >
-                </div>
+                <a href="program.html" class="program-btn">
+                  Explore class <span>→</span>
+                </a>
               </div>
             </div>
-            <!-- Card 2: Boxing Science (no icon) -->
-            <div
-              class="program-card group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-sm transition-all hover:border-forge/60"
-            >
-              <div class="relative h-48 overflow-hidden">
-                <img
-                  class="program-img h-full w-full object-cover transition-transform duration-500"
-                  src="bg.png"
-                  alt="Boxing training"
-                  onerror="
-                    this.src =
-                      'https://placehold.co/800x400/f2c300/111?text=BOXING'
-                  "
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-                ></div>
-              </div>
-              <div class="p-7 lg:p-8">
-                <h3
-                  class="font-display text-2xl font-bold uppercase tracking-tight"
-                >
-                  Boxing Science
-                </h3>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  <span
-                    class="rounded-full bg-forge/10 px-3 py-0.5 text-xs font-semibold text-forge"
-                    >Technique</span
-                  ><span
-                    class="rounded-full bg-white/5 px-3 py-0.5 text-xs font-semibold text-white/70"
-                    >Footwork & Power</span
-                  >
-                </div>
-                <p class="mt-4 text-white/70 leading-relaxed">
+
+            <!-- Program 2: Boxing Science -->
+            <div class="program-editorial-block">
+              <div class="program-text">
+                <span class="program-badge">Precision striking</span>
+                <h3 class="program-headline">Boxing<br />Science</h3>
+                <div class="program-thin-divider"></div>
+                <p class="program-description">
                   Pure boxing fundamentals: head movement, angles, punching
                   combinations, and defensive IQ. Modern boxing training that
                   sharpens reflexes.
                 </p>
-                <ul class="mt-5 space-y-2 text-sm text-white/60">
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Heavy bag & double-end bag
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Defensive drills & slip
-                    rope
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Technical sparring tracks
-                  </li>
+                <ul class="program-features">
+                  <li>Heavy bag & double-end bag</li>
+                  <li>Defensive drills & slip rope</li>
+                  <li>Technical sparring tracks</li>
                 </ul>
-                <div class="mt-7 pt-2">
-                  <a
-                    href="program.html"
-                    class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-forge transition-all hover:gap-3 hover:text-white"
-                    >Explore class <span>→</span></a
-                  >
-                </div>
+                <a href="program.html" class="program-btn">
+                  Explore class <span>→</span>
+                </a>
               </div>
-            </div>
-            <!-- Card 3: MMA Fusion (no icon) -->
-            <div
-              class="program-card group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-sm transition-all hover:border-forge/60"
-            >
-              <div class="relative h-48 overflow-hidden">
+              <div class="program-image">
                 <img
-                  class="program-img h-full w-full object-cover transition-transform duration-500"
-                  src="mma.png"
-                  alt="MMA sparring"
+                  src="bg.png"
+                  alt="Boxing training"
+                  class="w-full h-full object-cover"
                   onerror="
                     this.src =
-                      'https://placehold.co/800x400/f2c300/111?text=MMA'
+                      'https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=2071&auto=format'
                   "
                 />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-                ></div>
               </div>
-              <div class="p-7 lg:p-8">
-                <h3
-                  class="font-display text-2xl font-bold uppercase tracking-tight"
-                >
-                  MMA Fusion
-                </h3>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  <span
-                    class="rounded-full bg-forge/10 px-3 py-0.5 text-xs font-semibold text-forge"
-                    >Mixed Martial Arts</span
-                  ><span
-                    class="rounded-full bg-white/5 px-3 py-0.5 text-xs font-semibold text-white/70"
-                    >Striking + Grappling</span
-                  >
-                </div>
-                <p class="mt-4 text-white/70 leading-relaxed">
+            </div>
+
+            <!-- Program 3: MMA Fusion -->
+            <div class="program-editorial-block">
+              <div class="program-image">
+                <img
+                  src="mma.png"
+                  alt="MMA sparring"
+                  class="w-full h-full object-cover"
+                  onerror="
+                    this.src =
+                      'https://images.unsplash.com/photo-1599058917765-a3f1b1b8d2bf?q=80&w=2069&auto=format'
+                  "
+                />
+              </div>
+              <div class="program-text">
+                <span class="program-badge">Full spectrum</span>
+                <h3 class="program-headline">MMA<br />Fusion</h3>
+                <div class="program-thin-divider"></div>
+                <p class="program-description">
                   Seamless blend of Muay Thai, Boxing, and wrestling/BJJ
                   concepts. For MMA enthusiasts, fighters, or anyone who craves
                   full-spectrum combat sports.
                 </p>
-                <ul class="mt-5 space-y-2 text-sm text-white/60">
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Cage drills & transitions
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> takedown defense & ground
-                    strikes
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-forge">✓</span> Fight conditioning
-                    circuits
-                  </li>
+                <ul class="program-features">
+                  <li>Cage drills & transitions</li>
+                  <li>Takedown defense & ground strikes</li>
+                  <li>Fight conditioning circuits</li>
                 </ul>
-                <div class="mt-7 pt-2">
-                  <a
-                    href="program.html"
-                    class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-forge transition-all hover:gap-3 hover:text-white"
-                    >Explore class <span>→</span></a
-                  >
-                </div>
+                <a href="program.html" class="program-btn">
+                  Explore class <span>→</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Coaches Section (unchanged) -->
+      <!-- Coaches Section -->
       <section
         id="coaches"
         class="border-y border-white/10 bg-black px-5 py-20 sm:px-8"
@@ -711,7 +874,7 @@
         </div>
       </section>
 
-      <!-- Membership Section -->
+      <!-- Membership Section unchanged -->
       <section
         id="membership"
         class="border-y border-white/10 bg-black px-5 py-20 sm:px-8"
@@ -798,7 +961,7 @@
         </div>
       </section>
 
-      <!-- Testimonials Section (same functionality) -->
+      <!-- Testimonials Section (preserved scripts) -->
       <section class="bg-coal px-5 py-20 sm:px-8 overflow-hidden">
         <div class="mx-auto max-w-7xl">
           <div class="mb-12 text-center">
@@ -816,28 +979,7 @@
           <div
             class="mb-12 flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/10 bg-black/40 p-6 text-center sm:flex-row sm:justify-around"
             id="ratingSummary"
-          >
-            <div>
-              <div class="flex items-center justify-center gap-1">
-                <span class="text-5xl font-bold text-forge" id="avgRating"
-                  >4.9</span
-                ><span class="text-2xl text-white/60">/5</span>
-              </div>
-              <div
-                class="mt-1 flex justify-center gap-1"
-                id="starDisplay"
-              ></div>
-              <p class="mt-2 text-sm text-white/50">
-                Based on <span id="reviewCount">247</span> reviews
-              </p>
-            </div>
-            <div class="flex flex-col items-center">
-              <p class="text-3xl font-bold text-white">★★★★★</p>
-              <p class="mt-1 text-sm text-white/60">
-                "Best Muay Thai gym in the city!"
-              </p>
-            </div>
-          </div>
+          ></div>
           <div
             class="mb-12 rounded-2xl border border-white/10 bg-black/40 p-6 max-w-2xl mx-auto"
           >
@@ -854,7 +996,6 @@
               id="reviewText"
               rows="3"
               placeholder="Write your testimonial..."
-              me
               class="w-full mb-3 bg-black/60 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:border-forge"
             ></textarea>
             <div class="flex gap-3">
@@ -877,8 +1018,8 @@
       </section>
     </main>
 
-    <!-- FOOTER (unchanged) -->
     <footer class="border-t border-white/10 bg-black px-5 py-10 sm:px-8">
+      <!-- unchanged footer -->
       <div
         class="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.2fr_.8fr_.8fr] md:items-start"
       >
@@ -1018,65 +1159,84 @@
       </div>
     </footer>
 
+    <!-- full scripts (drawer, testimonials, slider) -->
     <script>
       // Hero slideshow
-      const slides = document.querySelectorAll(".hero-slide");
-      const prevBtn = document.querySelector(".prev");
-      const nextBtn = document.querySelector(".next");
-      const slideCurrentSpan = document.querySelector(".slide-current");
-      if (slides.length && prevBtn && nextBtn) {
-        let currentIdx = 0;
-        const total = slides.length;
-        function updateSlides(index) {
-          slides.forEach((slide, i) => {
-            slide.style.opacity = i === index ? "1" : "0";
+      const slidesEl = document.querySelectorAll(".hero-slide");
+      const prevBtnEl = document.querySelector(".prev");
+      const nextBtnEl = document.querySelector(".next");
+      const slideSpan = document.querySelector(".slide-current");
+      if (slidesEl.length && prevBtnEl && nextBtnEl) {
+        let idx = 0;
+        const totalSlides = slidesEl.length;
+        function updateSlideshow(i) {
+          slidesEl.forEach((s, n) => {
+            s.style.opacity = n === i ? "1" : "0";
           });
-          if (slideCurrentSpan) slideCurrentSpan.innerText = `0${index + 1}`;
+          if (slideSpan) slideSpan.innerText = `0${i + 1}`;
         }
         function nextSlide() {
-          currentIdx = (currentIdx + 1) % total;
-          updateSlides(currentIdx);
+          idx = (idx + 1) % totalSlides;
+          updateSlideshow(idx);
         }
         function prevSlide() {
-          currentIdx = (currentIdx - 1 + total) % total;
-          updateSlides(currentIdx);
+          idx = (idx - 1 + totalSlides) % totalSlides;
+          updateSlideshow(idx);
         }
-        nextBtn.addEventListener("click", nextSlide);
-        prevBtn.addEventListener("click", prevSlide);
+        nextBtnEl.addEventListener("click", nextSlide);
+        prevBtnEl.addEventListener("click", prevSlide);
         setInterval(nextSlide, 6000);
-        updateSlides(0);
+        updateSlideshow(0);
       }
 
-      // Side drawer logic (right to left, full height, overlay)
-      const openBtn = document.getElementById("openDrawerBtn");
-      const drawer = document.getElementById("sideDrawer");
-      const overlay = document.getElementById("drawerOverlay");
-      const closeBtn = document.getElementById("closeDrawerBtn");
-
-      function openDrawer() {
-        drawer.classList.add("open");
-        overlay.classList.add("open");
+      // Mobile drawer
+      const openDrawer = document.getElementById("openDrawerBtn");
+      const drawerEl = document.getElementById("sideDrawer");
+      const overlayEl = document.getElementById("drawerOverlay");
+      const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+      function openDrawerFn() {
+        drawerEl.classList.add("open");
+        overlayEl.classList.add("open");
         document.body.classList.add("drawer-open");
       }
-      function closeDrawer() {
-        drawer.classList.remove("open");
-        overlay.classList.remove("open");
+      function closeDrawerFn() {
+        drawerEl.classList.remove("open");
+        overlayEl.classList.remove("open");
         document.body.classList.remove("drawer-open");
       }
-      if (openBtn && drawer && overlay) {
-        openBtn.addEventListener("click", openDrawer);
-        closeBtn.addEventListener("click", closeDrawer);
-        overlay.addEventListener("click", closeDrawer);
-        // Close on escape key
+      if (openDrawer && drawerEl && overlayEl) {
+        openDrawer.addEventListener("click", openDrawerFn);
+        closeDrawerBtn.addEventListener("click", closeDrawerFn);
+        overlayEl.addEventListener("click", closeDrawerFn);
         document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && drawer.classList.contains("open")) {
-            closeDrawer();
-          }
+          if (e.key === "Escape" && drawerEl.classList.contains("open"))
+            closeDrawerFn();
         });
       }
 
-      // Testimonials Data (preserved)
-      let testimonials = [
+      // program fade-in
+      const progBlocks = document.querySelectorAll(".program-editorial-block");
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.style.opacity = "1";
+              e.target.style.transform = "translateY(0)";
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.15 },
+      );
+      progBlocks.forEach((b) => {
+        b.style.opacity = "0";
+        b.style.transform = "translateY(25px)";
+        b.style.transition = "opacity 0.7s ease, transform 0.7s ease";
+        obs.observe(b);
+      });
+
+      // testimonials dynamic (same as original, keep references)
+      let testimonialsData = [
         {
           name: "James Dela Cruz",
           initials: "JD",
@@ -1096,10 +1256,11 @@
           text: "The MMA program is legit. Coach Conor's striking classes transformed my game.",
         },
       ];
-      let selectedRating = 5;
-      const formStarsDiv = document.getElementById("formStars");
-      function generateFormStars() {
-        formStarsDiv.innerHTML = "";
+      let currentRatingVal = 5;
+      const formStarsContainer = document.getElementById("formStars");
+      function genFormStars() {
+        if (!formStarsContainer) return;
+        formStarsContainer.innerHTML = "";
         for (let i = 1; i <= 5; i++) {
           const svg = document.createElementNS(
             "http://www.w3.org/2000/svg",
@@ -1109,7 +1270,7 @@
           svg.setAttribute("fill", "currentColor");
           svg.setAttribute(
             "class",
-            `rating-star ${i <= selectedRating ? "text-forge" : "text-white/40"}`,
+            `rating-star ${i <= currentRatingVal ? "text-forge" : "text-white/40"}`,
           );
           svg.setAttribute("data-rating", i);
           svg.style.cursor = "pointer";
@@ -1117,30 +1278,33 @@
           svg.style.height = "32px";
           svg.innerHTML =
             '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
-          formStarsDiv.appendChild(svg);
+          formStarsContainer.appendChild(svg);
         }
       }
-      function updateFormStars(rating) {
-        const stars = formStarsDiv.querySelectorAll(".rating-star");
+      function updateFormStarsUI(rating) {
+        const stars = formStarsContainer.querySelectorAll(".rating-star");
         stars.forEach((star, idx) => {
           if (idx < rating) star.classList.add("text-forge");
           else star.classList.remove("text-forge");
           star.classList.add("text-white/40");
         });
       }
-      formStarsDiv.addEventListener("click", (e) => {
-        const star = e.target.closest(".rating-star");
-        if (star) {
-          selectedRating = parseInt(star.dataset.rating);
-          updateFormStars(selectedRating);
-        }
-      });
-      function renderTestimonials() {
+      if (formStarsContainer) {
+        formStarsContainer.addEventListener("click", (e) => {
+          const starTarget = e.target.closest(".rating-star");
+          if (starTarget) {
+            currentRatingVal = parseInt(starTarget.dataset.rating);
+            updateFormStarsUI(currentRatingVal);
+          }
+        });
+      }
+      function renderTestimonialCards() {
         const track = document.getElementById("testimonialTrack");
+        if (!track) return;
         track.innerHTML = "";
-        const allTestimonials = [...testimonials, ...testimonials];
-        allTestimonials.forEach((t) => {
-          const starsHtml = Array(5)
+        const doubled = [...testimonialsData, ...testimonialsData];
+        doubled.forEach((t) => {
+          const starHtml = Array(5)
             .fill(0)
             .map(
               (_, i) =>
@@ -1150,84 +1314,86 @@
           const card = document.createElement("div");
           card.className =
             "testimonial-card rounded-xl border border-white/10 bg-black/40 p-6 transition hover:border-forge";
-          card.innerHTML = `<div class="flex items-center gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-full bg-forge/20 text-forge font-bold text-lg">${t.initials}</div><div><p class="font-semibold text-lg">${t.name}</p><div class="flex gap-0.5 mt-1">${starsHtml}</div></div></div><p class="mt-4 text-white/80 leading-relaxed">"${t.text}"</p>`;
+          card.innerHTML = `<div class="flex items-center gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-full bg-forge/20 text-forge font-bold text-lg">${t.initials}</div><div><p class="font-semibold text-lg">${t.name}</p><div class="flex gap-0.5 mt-1">${starHtml}</div></div></div><p class="mt-4 text-white/80 leading-relaxed">"${t.text}"</p>`;
           track.appendChild(card);
         });
       }
-      function updateRatingSummary() {
-        const total = testimonials.length;
-        const sum = testimonials.reduce((acc, t) => acc + t.rating, 0);
+      function updateSummary() {
+        const total = testimonialsData.length;
+        const sum = testimonialsData.reduce((a, b) => a + b.rating, 0);
         const avg = sum / total;
-        document.getElementById("avgRating").innerText = avg.toFixed(1);
-        document.getElementById("reviewCount").innerText = total;
-        const starDisplay = document.getElementById("starDisplay");
-        starDisplay.innerHTML = "";
-        for (let i = 0; i < 5; i++) {
-          const svg = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "svg",
-          );
-          svg.setAttribute("viewBox", "0 0 20 20");
-          svg.setAttribute("class", "h-5 w-5");
-          if (i < Math.floor(avg)) {
-            svg.setAttribute("fill", "#f2c300");
-            svg.innerHTML =
+        const avgSpan = document.getElementById("avgRating");
+        const countSpan = document.getElementById("reviewCount");
+        if (avgSpan) avgSpan.innerText = avg.toFixed(1);
+        if (countSpan) countSpan.innerText = total;
+        const starDiv = document.getElementById("starDisplay");
+        if (starDiv) {
+          starDiv.innerHTML = "";
+          for (let i = 0; i < 5; i++) {
+            const starSvg = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "svg",
+            );
+            starSvg.setAttribute("viewBox", "0 0 20 20");
+            starSvg.setAttribute("class", "h-5 w-5");
+            if (
+              i < Math.floor(avg) ||
+              (i === Math.floor(avg) && avg - Math.floor(avg) >= 0.5)
+            ) {
+              starSvg.setAttribute("fill", "#f2c300");
+            } else {
+              starSvg.setAttribute("fill", "rgba(255,255,255,0.3)");
+            }
+            starSvg.innerHTML =
               '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
-          } else if (i === Math.floor(avg) && avg - Math.floor(avg) >= 0.5) {
-            svg.setAttribute("fill", "#f2c300");
-            svg.innerHTML =
-              '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
-          } else {
-            svg.setAttribute("fill", "rgba(255,255,255,0.3)");
-            svg.innerHTML =
-              '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>';
+            starDiv.appendChild(starSvg);
           }
-          starDisplay.appendChild(svg);
         }
       }
-      document.getElementById("submitReview").addEventListener("click", () => {
-        const name = document.getElementById("reviewerName").value.trim();
-        const text = document.getElementById("reviewText").value.trim();
-        if (!text) {
-          document.getElementById("reviewMsg").innerText =
-            "Please write a testimonial";
-          setTimeout(
-            () => (document.getElementById("reviewMsg").innerText = ""),
-            3000,
-          );
+      document.getElementById("submitReview")?.addEventListener("click", () => {
+        const nameInput = document.getElementById("reviewerName").value.trim();
+        const reviewTextArea = document
+          .getElementById("reviewText")
+          .value.trim();
+        if (!reviewTextArea) {
+          const msgDiv = document.getElementById("reviewMsg");
+          if (msgDiv) msgDiv.innerText = "Please write a testimonial";
+          setTimeout(() => {
+            if (msgDiv) msgDiv.innerText = "";
+          }, 3000);
           return;
         }
-        const initials = name
-          ? name
+        const initials = nameInput
+          ? nameInput
               .split(" ")
               .map((n) => n[0])
               .join("")
               .toUpperCase()
               .slice(0, 2)
           : "GU";
-        const displayName = name || "Anonymous Warrior";
-        testimonials.unshift({
+        const displayName = nameInput || "Anonymous Warrior";
+        testimonialsData.unshift({
           name: displayName,
           initials,
-          rating: selectedRating,
-          text,
+          rating: currentRatingVal,
+          text: reviewTextArea,
         });
-        renderTestimonials();
-        updateRatingSummary();
+        renderTestimonialCards();
+        updateSummary();
         document.getElementById("reviewerName").value = "";
         document.getElementById("reviewText").value = "";
-        selectedRating = 5;
-        updateFormStars(5);
-        document.getElementById("reviewMsg").innerText =
-          "✓ Thank you for your review!";
-        setTimeout(
-          () => (document.getElementById("reviewMsg").innerText = ""),
-          3000,
-        );
+        currentRatingVal = 5;
+        updateFormStarsUI(5);
+        const msgDiv = document.getElementById("reviewMsg");
+        if (msgDiv) msgDiv.innerText = "✓ Thank you for your review!";
+        setTimeout(() => {
+          if (msgDiv) msgDiv.innerText = "";
+        }, 3000);
       });
-      generateFormStars();
-      renderTestimonials();
-      updateRatingSummary();
+      genFormStars();
+      renderTestimonialCards();
+      updateSummary();
     </script>
   </body>
 </html>
+ remove the dot  also remove unecessary code dont change any thing
